@@ -96,29 +96,42 @@ skillService.intent("continueIntent", {
     },
     'utterances': ['{-|CONTINUE}']
 }, function (request, response) {
-    var stateManager = getStateManagerFromRequest(request);
-    var user_response = request.slot('CONTINUE');
-    console.log(user_response);
-    var state;
-    if (stateManager.currentState == "continue_state") {
-        if (user_response == "continue") {
-            stateManager.currentState = "step_by_step";
-            state = stateManager.getCurrentState();
-            var steps_arr = state.response;
-            response.say(steps_arr[state.step]).reprompt(reprompt + state.help).shouldEndSession(false);
-            response.session(SESSION_KEY, stateManager);
-        } else if (user_response == "new session") {
-            stateManager.currentState = "start";
-            state = stateManager.getCurrentState();
-            response.say(state.prompt).reprompt(reprompt + state.help).shouldEndSession(false);
-            response.session(SESSION_KEY, stateManager);
-        } else {
-            response.say("I didn't understand what you said. " + state.help).reprompt(reprompt + state.help).shouldEndSession(false);
-        }
-    } else {
-        response.say("I didn't understand what you said. " + state.help).reprompt(reprompt + state.help).shouldEndSession(false);
-    }
-
+    databaseHelper.readRecipeData(request.userId).then(
+        function (result) {
+            console.log("got", result);
+            var stateManager = result;
+            var state;
+            if (stateManager == undefined) {
+                stateManager = getStateManagerFromRequest(request);
+                state = stateManager.getCurrentState();
+            }
+            if (stateManager.currentState == "step_by_step") {
+                stateManager.currentState = "continue_state";
+                state = stateManager.getCurrentState();
+                console.log(state);
+            }
+            var user_response = request.slot('CONTINUE');
+            console.log(user_response);
+            if (stateManager.currentState == "continue_state") {
+                if (user_response == "continue") {
+                    stateManager.currentState = "step_by_step";
+                    state = stateManager.getCurrentState();
+                    var steps_arr = state.response;
+                    response.say(steps_arr[state.step]).reprompt(reprompt + state.help).shouldEndSession(false).send();
+                    response.session(SESSION_KEY, stateManager);
+                } else if (user_response == "new session") {
+                    stateManager.currentState = "start";
+                    state = stateManager.getCurrentState();
+                    response.say(state.prompt).reprompt(reprompt + state.help).shouldEndSession(false).send();
+                    response.session(SESSION_KEY, stateManager);
+                } else {
+                    response.say("I didn't understand what you said. " + state.help).reprompt(reprompt + state.help).shouldEndSession(false).send();
+                }
+            } else {
+                response.say("I didnt find any session to continue. " + state.help).reprompt(reprompt + state.help).shouldEndSession(false).send();
+            }
+        });
+    return false;
 });
 
 skillService.intent("searchIntent", {
