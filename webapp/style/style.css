@@ -1,0 +1,33 @@
+.black {
+  color: black
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: ghostwhite;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  width: 50%;
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.block {
+  margin: 10px 0px;
+}
+
+.step {
+  margin: 10px 0px;
+}
+
+.right {
+  float: right;
+}
