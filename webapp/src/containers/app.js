@@ -5,7 +5,8 @@ import {addStep, removeStep, submitRecipe} from '../actions/steps'
 
 function mapStateToProps(state) {
     return {
-        steps:state.stepReducer
+        steps:state.stepReducer,
+        page: state.pageReducer
     }
 }
 
