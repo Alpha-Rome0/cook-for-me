@@ -1,10 +1,11 @@
 const express = require('express')
 const http = require("http")
+const fs = require('fs')
+const restClient = require('../../rest_client')
 const app = express()
 const port = 3000
 const inputFile = 'credentials.json'
-const fs = require('fs')
-var recipes
+const client=new restClient();
 
 fs.readFile(inputFile, 'utf8', function(err, data) {
   if (err) throw err;
@@ -37,6 +38,15 @@ app.get('/all', (request, response) => {
   recipes.then(function(user) {
     response.send(JSON.parse(user.storedRecipes))
   });
+});
+
+app.get('/online', (request, response) => {
+  if (!request['ingredients']) {
+    request['ingredients'] = 'tofu'
+  }
+  return client.getListIngredients(request['ingredients']).then(function(ingredient) {
+    response.send(ingredient)
+  })
 });
 
 app.listen(port)
