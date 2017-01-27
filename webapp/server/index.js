@@ -14,6 +14,12 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   recipes = dynasty.table('recipesData').find('test')
 })
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 app.get('/', (request, response) => {
   response.send('BROWNTOWN')
 });
@@ -24,6 +30,12 @@ app.get('/search', (request, response) => {
   }
   recipes.then(function(user) {
     response.send(JSON.parse(user.storedRecipes)[request['id']])
+  });
+});
+
+app.get('/all', (request, response) => {
+  recipes.then(function(user) {
+    response.send(JSON.parse(user.storedRecipes))
   });
 });
 
