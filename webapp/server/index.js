@@ -41,10 +41,10 @@ app.get('/all', (request, response) => {
 });
 
 app.get('/online', (request, response) => {
-  if (!request['ingredients']) {
-    request['ingredients'] = 'tofu'
+  if (!request.query.ingredients) {
+    request.query.ingredients = 'tofu'
   }
-  return client.getListIngredients(request['ingredients']).then(function(ingredient) {
+  return client.getListIngredients(request.query.ingredients).then(function(ingredient) {
     response.send(ingredient)
   })
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 
-import {ALL_RECIPES, SEARCH_RECIPES} from '../env.js';
+import {ALL_RECIPES, SEARCH_RECIPES, SEARCH_ONLINE} from '../env.js';
 
 import AppBar from 'material-ui/AppBar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -12,6 +12,8 @@ import TextField from 'material-ui/TextField';
 
 import Step from './step'
 import InputStep from './input'
+import TabBar from './tabs'
+import RecipeCard from './recipecard'
 
 const propTypes = {
   steps: React.PropTypes.array.isRequired,
@@ -27,11 +29,15 @@ export default class App extends Component {
     super(props)
     this.makePage = this.makePage.bind(this)
     this.getRecipes = this.getRecipes.bind(this)
+    this.getResults = this.getResults.bind(this)
     this.newRecipe = this.newRecipe.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.handleSearchChange = this.handleSearchChange.bind(this)
     this.state = {
       recipes:[],
-      filter:''
+      searchResults:[],
+      filter:'',
+      search:''
     }
   }
   componentDidMount() {
@@ -48,9 +54,24 @@ export default class App extends Component {
         return responseJson
       })
   }
+  getResults() {
+    return fetch(`${SEARCH_ONLINE}?ingredients=${this.state.search}`)
+      .then((response) => response.json()).then((responseJson) => {
+        console.log(responseJson)
+        const newState = this.state
+        newState.searchResults=responseJson
+        this.setState(newState)
+        return responseJson
+      })
+  }
   handleFilterChange(e,v) {
     const newState = this.state
     newState.filter = v
+    this.setState(newState)
+  }
+  handleSearchChange(e,v) {
+    const newState = this.state
+    newState.search = v
     this.setState(newState)
   }
   newRecipe() {
@@ -66,10 +87,30 @@ export default class App extends Component {
       marginBottom: 10
     }
     switch(this.props.page.page) {
+      case 'searchrecipes':
+       return(
+         <div className="page">
+          <div className="content">
+            <Card>
+              <CardHeader
+                titleStyle={titleStyle}
+                title="Search Recipes Online"
+              />
+              <CardText>
+                  <TextField hintText='search' onChange={this.handleSearchChange} value={this.state.search}/>
+                  <FlatButton secondary label="search" onClick={this.getResults} />
+              </CardText>
+            </Card>
+            {
+              this.state.searchResults.map((recipe, i) =>
+                <RecipeCard recipe={recipe} />)
+            }
+          </div>
+         </div>
+       )
       case 'newrecipe':
         return (
           <div className="page">
-            <AppBar title="Cook For Me" showMenuIconButton={false}/>
             <div className="content">
               <Card>
                 <CardHeader
@@ -89,10 +130,8 @@ export default class App extends Component {
           </div>
         )
       case 'recipes':
-        const fabStyle = {marginLeft: 20}
         return (
           <div className="page">
-            <AppBar title="CookForMe" showMenuIconButton={false}/>
             <div className="content">
               <Card>
                 <CardHeader
@@ -112,9 +151,6 @@ export default class App extends Component {
                   </Card>)
               }
             </div>
-            <FloatingActionButton secondary style={fabStyle} onClick={this.newRecipe}>
-              <ContentAdd />
-            </FloatingActionButton>
           </div>
         )
       default:
@@ -123,7 +159,11 @@ export default class App extends Component {
   }
   render() {
     const page = this.makePage()
-    return page
+    return (<div>
+    <AppBar title="CookForMe" showMenuIconButton={false} />
+    <TabBar page={this.props.page.page} changePage={this.props.changePage} />
+    {page}
+    </div>)
   }
 }
 

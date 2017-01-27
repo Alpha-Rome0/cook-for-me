@@ -11,6 +11,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
+
+
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
     <MuiThemeProvider muiTheme={getMuiTheme()}>
