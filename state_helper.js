@@ -58,7 +58,59 @@ function State_manager(obj){
             step:0,
             prompt:"Say next step to move on to the next step or previous step to go back",
             help:"Say next step to move on to the next step or previous step to go back"
+        },
+
+        add_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+
+        add_title_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        confirm_title_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        redo_title_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        add_step_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        confirm_step_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        redo_step_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
+        },
+        done_adding_intent:{
+            response:null,
+            step:0,
+            prompt: "Please state each step of the recipe one by one",
+            help: "I will repeat the step to you, and you can choose to move to the next step or not. When you complete the recipe, say end recipe"
         }
+
+
     };
     for(var prop in obj)this[prop]=obj[prop];
 }

@@ -393,4 +393,102 @@ skillService.intent("save_intent", {
     }
 });
 
+
+
+skillService.intent("add_intent", {
+    'utterances': ['{add} {recipe}']
+}, function (request, response) {
+    var stateManager = getStateManagerFromRequest(request);
+    var state=stateManager.getCurrentState();
+    //if(stateManager.currentState == "add_intent")
+    response.say("What's the name of your recipe? Say recipe before your title").shouldEndSession(false);
+    //go to add_title_intent
+    response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("add_title_intent", {
+    'slots': {
+            'TITLE': "TEXT"
+    },
+    'utterances': ['{Recipe} {-|TITLE}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        //figure out how to save TITLE into our session
+        response.say("Is " + request.slot("TITLE") + " okay? Say confirm title to continue, or redo title to fix this step.").shouldEndSession(false);
+        //goto confirm_title_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("confirm_title_intent", {
+    'utterances': ['{confirm} {title}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        response.say("Great! What's the first step of your recipe?").shouldEndSession(false);
+        //go to add_step_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("redo_title_intent", {
+    'utterances': ['{redo} {title}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        response.say("Can you repeat the title of your recipe?").shouldEndSession(false);
+        //go to add_title_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+
+skillService.intent("add_step_intent", {
+    'slots': {
+            'ORDER': "NUMBER",
+            'STEP': "TEXT"
+        },
+    'utterances': ['{Step} {-|ORDER} {-|STEP}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        //figure out how to incorporate TITLE into response
+        response.say("Is " + request.slot("STEP") + " okay? Say add next step or done with steps to continue, or redo"
+        +" current step to fix this step.").shouldEndSession(false);
+        //go to confirm_step_intent or redo_step_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("confirm_step_intent", {
+    'utterances': ['{add} {next} {step}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        response.say("Great! What's the next step of your recipe?").shouldEndSession(false);
+        //go to add_step_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("redo_step_intent", {
+    'utterances': ['{redo} {current} {step}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        response.say("Can you repeat the step of your recipe?").shouldEndSession(false);
+        //go to add_step_intent
+        response.session(SESSION_KEY, stateManager);
+});
+
+skillService.intent("done_adding_intent", {
+    'utterances': ['{done} {with} {steps}']
+    }, function (request, response) {
+        var stateManager = getStateManagerFromRequest(request);
+        var state=stateManager.getCurrentState();
+        //figure out how to incorporate TITLE into response
+        response.say("You have successfully created a recipe.");
+        //idk where to go here.
+        response.session(SESSION_KEY, stateManager);
+});
+
+
+
+
 module.exports = skillService;
