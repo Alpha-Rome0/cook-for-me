@@ -14,6 +14,7 @@ import Step from './step'
 import InputStep from './input'
 import TabBar from './tabs'
 import RecipeCard from './recipecard'
+import ExpandableCard from './expandablecard'
 
 const propTypes = {
   steps: React.PropTypes.array.isRequired,
@@ -80,8 +81,8 @@ export default class App extends Component {
   makePage() {
     const self = this;
     const titleStyle = {
-          fontSize: 30
-        }
+      fontSize: 25
+    }
     const cardStyle = {
       marginTop: 10,
       marginBottom: 10
@@ -122,7 +123,7 @@ export default class App extends Component {
                 </CardText>
 
               </Card>
-              { this.props.steps.map((step, i) => 
+              { this.props.steps.map((step, i) =>
                   <Step removeStep={self.props.removeStep} id={i} content={step.content} />)
               }
               <InputStep submitRecipe={self.props.submitRecipe} addStep={self.props.addStep} />
@@ -143,12 +144,8 @@ export default class App extends Component {
                 </CardText>
               </Card>
               { this.state.recipes.filter((recipe) => recipe.title.includes(this.state.filter) || this.state.filter == '').map((recipe, i) =>
-                  <Card key={i} style={cardStyle}>
-                    <CardHeader
-                      titleStyle={titleStyle}
-                      title={recipe.title}
-                    />
-                  </Card>)
+                  <ExpandableCard recipe={recipe} expanded={false} />
+                )
               }
             </div>
           </div>
