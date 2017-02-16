@@ -20,7 +20,6 @@ export default class Step extends Component {
         this.props.removeStep(this.props.id)
     }
     render() {
-        console.log(this.props.removeStep)
         return (
             <div className='step'>
                 <Card>
