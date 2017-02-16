@@ -65,7 +65,7 @@ skillService.intent("AMAZON.HelpIntent", {},
         var stateManager = getStateManagerFromRequest(request);
         var state = stateManager.getCurrentState();
         var help = state.help;
-        response.say(help).shouldEndSession(false);
+        response.say(help).reprompt(reprompt + state.help).shouldEndSession(false);
     });
 
 skillService.intent("load_intent", {
@@ -87,7 +87,7 @@ skillService.intent("load_intent", {
             response.say(state.prompt + ". " + talk + state.help).reprompt(reprompt + state.help).shouldEndSession(false).send();
             response.session(SESSION_KEY, stateManager);
         }else{
-            response.say("you have no saved recipes").shouldEndSession(false);
+            response.say("you have no saved recipes").reprompt(reprompt + state.help).shouldEndSession(false);
         }
     });
 skillService.intent("continueIntent", {
@@ -226,7 +226,7 @@ skillService.intent("beginSearchIntent", {
             else {
                 state.response = null;
                 stateManager.currentState = "search";
-                response.say("there were no matches for those search terms. Say search by ingredients or search by keywords to try again").shouldEndSession(false).send();
+                response.say("there were no matches for those search terms. Say search by ingredients or search by keywords to try again").reprompt(reprompt + state.help).shouldEndSession(false).send();
                 response.session(SESSION_KEY, stateManager);
             }
         };
@@ -242,7 +242,7 @@ skillService.intent("beginSearchIntent", {
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt  + state.help).shouldEndSession(false).send();
             });
         } else if (stateManager.currentState == "ingredients1") {
             for (i = 0; i < state.response.length; i++) {
@@ -254,7 +254,7 @@ skillService.intent("beginSearchIntent", {
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt  + state.help).shouldEndSession(false).send();
             });
         }
         return false;
@@ -281,12 +281,19 @@ skillService.intent("selectIntent", {
             var id=recipe_info.id;
             var restClient = new Rest_client();
             restClient.getRecipeSteps(id).then(function (result) {
-                console.log(result[0]);
-                var step_arr = [];
-                if (result[0].steps.length > 0) {
+                console.log(result);
+                if (result.length>0 && result[0].steps.length > 0) {
+                    var addSpace=function(match){
+                        var str_array=match.split(".");
+                        return str_array[0]+". "+str_array[1];
+                    };
+                    var step_arr = [];
                     var steps = result[0].steps;
+                    var current_step;
                     for (var i = 0; i < steps.length; i++) {
-                        step_arr.push(steps[i].step);
+                        current_step=steps[i].step;
+                        current_step=current_step.replace(/.\.\w/,addSpace);
+                        step_arr.push(current_step);
                     }
                     stateManager.currentState = "steps_choice";
                     state = stateManager.getCurrentState();
@@ -295,11 +302,15 @@ skillService.intent("selectIntent", {
                     response.say(state.prompt).reprompt(reprompt + state.help).shouldEndSession(false).send();
                     response.session(SESSION_KEY, stateManager);
                 }
-                else response.say("this recipe doesn't seem to have any steps");
+                else{
+                    stateManager.currentState = "search";
+                    response.say("this recipe doesn't seem to have any steps. Say search by ingredients or search by keywords to try again").reprompt(reprompt + state.help).shouldEndSession(false).send();
+                    response.session(SESSION_KEY, stateManager);
+                }
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt  + state.help).shouldEndSession(false).send();
             });
             return false;
         }
@@ -322,7 +333,7 @@ skillService.intent("steps_choice_intent", {
         if (request.slot("STEPS_SELECTION") == "all at once") {
             var output = "";
             for (var i = 0; i < steps_arr.length; i++) {
-                output += steps_arr[i];
+                output += steps_arr[i]+" ";
             }
             response.say(output);
         } else if (request.slot("STEPS_SELECTION") == "step by step") {
@@ -355,14 +366,14 @@ skillService.intent("step_by_step_intent", {
                 state.step++;
                 response.say(steps_arr[state.step]).reprompt(reprompt + state.help).shouldEndSession(false);
             } else {
-                response.say("that was the last step").shouldEndSession(false);
+                response.say("that was the last step").reprompt(reprompt + state.help).shouldEndSession(false);
             }
         } else if (request.slot("USERSTEP") == "previous") {
             if (state.step > 0) {
                 state.step--;
                 response.say(steps_arr[state.step]).reprompt(reprompt + state.help).shouldEndSession(false);
             } else {
-                response.say("that was the first step").shouldEndSession(false);
+                response.say("that was the first step").reprompt(reprompt + state.help).shouldEndSession(false);
             }
         } else response.say("I didn't understand what you said. " + state.help).reprompt(reprompt + state.help).shouldEndSession(false);
         var userId = request.userId;
