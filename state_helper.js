@@ -9,7 +9,7 @@ function State_manager(obj){
     {
         start:{
             response:null,
-            prompt:"Welcome to cook for me. I am here to help you cook. How can I be of service? If you want to know what I can do say, help.",
+            prompt:"Hello Chef, I am here to help you cook. How can I be of service? If you want to know what I can do, say help.",
             help:"Simply say, find by keyword or find by ingredients. Say, saved recipes, to pick from a list of saved recipes. Say cancel or stop at any time to exit."
         },
         continue_state:{
@@ -50,8 +50,8 @@ function State_manager(obj){
         steps_choice:{
             response:null,
             recipe_info:null,
-            prompt:"Would you like me to read ingredients step by step or all at once?",
-            help:"You can say, step by step, or all at once."
+            prompt:"Would you like me to read ingredients step by step or all at once? You may also say, save recipe, to save this recipe",
+            help:"You can say, step by step, or all at once. You may also say, save recipe, to save this recipe"
         },
         step_by_step:{
             response:null,
@@ -62,6 +62,7 @@ function State_manager(obj){
     };
     for(var prop in obj)this[prop]=obj[prop];
 }
+
 
 
 State_manager.prototype.getCurrentState=function(){
