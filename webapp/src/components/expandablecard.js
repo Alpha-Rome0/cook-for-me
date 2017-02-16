@@ -6,7 +6,6 @@ import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import _ from 'lodash'
 
 const propTypes = {
     recipe: React.PropTypes.object.isRequired
@@ -56,6 +55,12 @@ export default class ExpandableCard extends Component {
   }
 
   render() {
+    const listStyle = {
+      backgroundColor: '#f5f5f5'
+    }
+    const liStyle = {
+      paddingLeft: 20
+    }
     return (
       <div onClick={this.handleClick}>
       <Card style={cardStyle} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
@@ -66,10 +71,8 @@ export default class ExpandableCard extends Component {
           actAsExpander={true}
           showExpandableButton={true}
         />
-        <List expandable>
-          {_.each(this.props.recipe.steps, (step) => {
-            (<div><ListItem primaryText={step} /><Divider /></div>)
-          })}
+        <List style={listStyle} expandable>
+          {this.props.recipe.steps.map((step, i) => <ListItem style={liStyle} primaryText={`Step ${i+1}. ${step}`} /> )}
         </List>
       </Card>
       </div>
