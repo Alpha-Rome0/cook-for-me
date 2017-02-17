@@ -31,3 +31,8 @@ body, html {
 .right {
   float: right;
 }
+
+.recipeCard {
+  width: 30%;
+  margin: 5px;
+}
