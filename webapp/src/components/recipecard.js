@@ -10,14 +10,19 @@ const propTypes = {
 
 export default class RecipeCard extends Component {
   render() {
+    const delimit = this.props.recipe.image.split('/')
+    const recipeString = delimit[delimit.length - 1].split('.')[0]
+    const link = `https://spoonacular.com/recipe/${recipeString}`
     return (
       <div>
+        <a href={link}>
         <Card>
           <CardMedia
             overlay={<CardTitle title={this.props.recipe.title} />} >
             <img src={this.props.recipe.image} />
           </CardMedia>
         </Card>
+        </a>
       </div>
     )
   }

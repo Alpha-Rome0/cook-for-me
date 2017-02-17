@@ -2,7 +2,7 @@
 module.change_code = 1;
 var requestPromise = require('request-promise');
 var ENDPOINT = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
-var NUM_RESULTS=3;
+var NUM_RESULTS=10;
 
 function rest_client() {
 }
