@@ -4,7 +4,7 @@ module.change_code = 1;
 var State_helper = require('./state_helper');
 var DATA_TABLE_NAME = 'recipesData';
 const fs = require('fs')
-var inputFile = 'credentials.json'
+var inputFile = 'credentials.json';
 
 //var localUrl = 'http://localhost:8000';
 //var localCredentials = {
@@ -18,7 +18,7 @@ var dynasty;
 fs.readFile(inputFile, 'utf8', function(err, data) {
   if (err) throw err;
   console.log('OK: ' + inputFile);
-  var localCredentials = JSON.parse(data)
+  var localCredentials = JSON.parse(data);
   dynasty = require('dynasty')(localCredentials)
 })
 
