@@ -37,6 +37,7 @@ var cancelIntentFunction = function (request, response) {
 var reprompt = "I didnt hear anything. ";
 
 skillService.launch(function (request, response) {
+    console.log(request)
     databaseHelper.readRecipeData(request.userId).then(
         function (result) {
             console.log("got", result);
@@ -181,12 +182,54 @@ skillService.intent("queryIntent", {
     response.session(SESSION_KEY, stateManager);
 });
 
+function listRecipes(recipes, response, nextState, stateManager) {
+    response.say("HERE")
+    console.log(recipes)
+    talk = "none"
+    if(recipes.length>0){
+        for (var i = 0; i < recipes.length; i++) {
+            if (recipes[i].title) {
+                talk += (i + 1).toString() + ". " + recipes[i].title + ". ";
+            }
+        }
+        talk = talk.replace(/&/g, 'and');
+    }
+    return talk
+}
+
 skillService.intent("storedRecipesIntent", {
         'utterances': ['{stored} {recipes}']
 }, function (request, response) {
-    response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
-    console.log(databaseHelper.readRecipeData("test"))
+    //response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
+    //console.log("HERE")
+    var talk;
+    databaseHelper.readStoredRecipeData("test", response, getStateManagerFromRequest(request)).then(function(result) {
+        talk = listRecipes(result[0], result[1], "search_choices", result[2])
+    });
+    while (!talk) {
+      console.log(talk)
+    }
+    if (talk == "none") {
+        response.say("you have no stored recipes").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
+    } else {
+        console.log("HERE")
+        var stateManager = getStateManagerFromRequest(request)
+        console.log(stateManager)
+        stateManager.currentState = nextState;
+        var state = stateManager.getCurrentState();
+        state.response = recipes;
+        response.say(stateManager.getPrompt() + ". " + talk + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
+        response.session(SESSION_KEY, stateManager);
+    }
+    //var stateManager = getStateManagerFromRequest(request);
+    //console.log(stateManager)
+    //response.session(SESSION_KEY, stateManager);
+    //console.log("HERE")
+    //response.say(recipes[0].title)
+    //listRecipes(recipes, response, 'search_recipes')
 });
+
+
 
 skillService.intent("beginSearchIntent", {
     'utterances': ['{begin} {search}']

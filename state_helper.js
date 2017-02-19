@@ -5,6 +5,7 @@ var Set = require("collections/set");
 function State_manager(obj){
     this.currentState='start';
     this.savedRecipes=new Set();
+    this.storedRecipes=new Set();
     this.states=
     {
         start:{
@@ -40,6 +41,9 @@ function State_manager(obj){
             response:null,
             ingredients: null,
             step:0
+        },
+        stored_choices: {
+            response:null
         }
     };
     for(var prop in obj)this[prop]=obj[prop];

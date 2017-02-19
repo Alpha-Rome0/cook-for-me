@@ -58,6 +58,20 @@ DatabaseHelper.prototype.readRecipeData = function (userId) {
         var data = (result === undefined ? {} : JSON.parse(result['data']));
         return new State_helper(data);
     }).catch(function (error) {
+        console.log("ERROR:")
+        console.log(error);
+    });
+};
+
+DatabaseHelper.prototype.readStoredRecipeData = function (userId, response, stateManager) {
+    console.log('reading recipeData with user id of : ' + userId);
+    return recipeTable().find(userId).then(function (result) {
+        console.log(result);
+        console.log(response);
+        console.log(stateManager);
+        return [result.storedRecipes, response, stateManager]
+    }).catch(function (error) {
+        console.log("ERROR:")
         console.log(error);
     });
 };
