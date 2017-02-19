@@ -85,6 +85,7 @@ skillService.intent("load_intent", {
             response.say("you have no saved recipes").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
         }
     });
+
 skillService.intent("continueIntent", {
     'slots': {
         'CONTINUE': 'CONTINUETYPE'
