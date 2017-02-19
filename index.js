@@ -38,19 +38,22 @@ var cancelIntentFunction = function (request, response) {
 var reprompt = "I didnt hear anything. ";
 
 skillService.launch(function (request, response) {
-    console.log("start");
-    databaseHelper.readRecipeData(request.userId).then(
+    var userId = (request.userId === null ? "test" : request.userId);
+    console.log(userId)
+    databaseHelper.readRecipeData(userId).then(function (result) {
+        return databaseHelper.readStoredRecipeData("test", result)}).then(
         function (result) {
             console.log("got", result);
             var stateManager = result;
             if (stateManager.currentState == "step_by_step") {
                 stateManager.currentState = "continue_state";
-                console.log(stateManager.getCurrentState());
+                //console.log(stateManager.getCurrentState());
             } else {
                 stateManager.currentState = "start";
             }
             response.say(stateManager.getPrompt()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
             response.session(SESSION_KEY, stateManager);
+            console.log(stateManager)
         });
     return false
 });
@@ -190,9 +193,7 @@ skillService.intent("queryIntent", {
 });
 
 function listRecipes(recipes, response, nextState, stateManager) {
-    response.say("HERE")
-    console.log(recipes)
-    talk = "none"
+    var talk = ""
     if(recipes.length>0){
         for (var i = 0; i < recipes.length; i++) {
             if (recipes[i].title) {
@@ -210,13 +211,17 @@ skillService.intent("storedRecipesIntent", {
     //response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
     //console.log("HERE")
     var talk;
+    var stateManager = getStateManagerFromRequest(request)
     databaseHelper.readStoredRecipeData("test", response, getStateManagerFromRequest(request)).then(function(result) {
         talk = listRecipes(result[0], result[1], "search_choices", result[2])
+        console.log(talk)
+        //response.say(stateManager.getPrompt() + ". " + talk + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
+        //response.session(SESSION_KEY, stateManager);
     });
-    while (!talk) {
-      console.log(talk)
+    while (!talk){
     }
-    if (talk == "none") {
+    console.log(talk)
+    /*if (talk == "none") {
         response.say("you have no stored recipes").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
     } else {
         console.log("HERE")
@@ -227,7 +232,7 @@ skillService.intent("storedRecipesIntent", {
         state.response = recipes;
         response.say(stateManager.getPrompt() + ". " + talk + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
         response.session(SESSION_KEY, stateManager);
-    }
+    }*/
     //var stateManager = getStateManagerFromRequest(request);
     //console.log(stateManager)
     //response.session(SESSION_KEY, stateManager);
