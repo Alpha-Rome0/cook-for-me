@@ -185,6 +185,7 @@ skillService.intent("storedRecipesIntent", {
         'utterances': ['{stored} {recipes}']
 }, function (request, response) {
     response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
+    console.log(databaseHelper.readRecipeData("test"))
 });
 
 skillService.intent("beginSearchIntent", {
