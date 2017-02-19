@@ -7,6 +7,8 @@ import Toggle from 'material-ui/Toggle';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
+import Ingredient from './ingredient'
+
 const propTypes = {
     recipe: React.PropTypes.object.isRequired
 }
@@ -61,16 +63,28 @@ export default class ExpandableCard extends Component {
     const liStyle = {
       paddingLeft: 20
     }
+    const wrapperStyle = {
+          display: 'flex',
+          flexWrap: 'wrap',
+        }
     return (
       <div onClick={this.handleClick}>
       <Card style={cardStyle} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
         <CardHeader
           titleStyle={titleStyle}
           title={this.props.recipe.title}
-          subtitle={this.props.recipe.description.summary}
+          subtitle={`${this.props.recipe.description.summary} - ${this.props.recipe.description.duration} minutes`}
           actAsExpander={true}
           showExpandableButton={true}
         />
+        <CardText expandable>
+          <div style={wrapperStyle}>
+            {
+              this.props.recipe.ingredients.map((ingredient, i) => 
+                <Ingredient content={ingredient} />)
+            }
+          </div>
+        </CardText>
         <List style={listStyle} expandable>
           {this.props.recipe.steps.map((step, i) => <ListItem style={liStyle} primaryText={`Step ${i+1}. ${step}`} /> )}
         </List>
