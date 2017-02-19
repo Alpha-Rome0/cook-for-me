@@ -182,6 +182,13 @@ skillService.intent("queryIntent", {
     response.session(SESSION_KEY, stateManager);
 });
 
+skillService.intent("storedRecipesIntent", {
+        'utterances': ['{stored} {recipes}']
+}, function (request, response) {
+    response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
+    console.log(databaseHelper.readRecipeData("test"))
+});
+
 skillService.intent("beginSearchIntent", {
     'utterances': ['{begin} {search}']
 }, function (request, response) {
@@ -267,6 +274,8 @@ skillService.intent("selectIntent", {
     }
     else {
         if (request.slot('SELECT') > 0 && request.slot('SELECT') <= recipes.length) {
+            console.log("RECIPES!")
+            console.log(recipes)
             var recipe_info = recipes[request.slot('SELECT') - 1];
             var id=recipe_info.id;
             stateManager.currentState = "steps_choice";
