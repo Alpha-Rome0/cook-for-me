@@ -276,10 +276,8 @@ skillService.intent("selectIntent", {
             console.log(recipes)
             var recipe_info = recipes[request.slot('SELECT') - 1];
             var id=recipe_info.id;
-            console.log(stateManager.currentState)
             stateManager.currentState = "steps_choice";
             var restClient = new Rest_client();
-            console.log(restClient)
             restClient.getIngredients(id).then(function(result){
                 console.log(result);
                 var title= result.title;

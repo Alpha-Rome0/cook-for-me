@@ -54,6 +54,8 @@ Rest_client.prototype.getRecipeSteps = function (recipe_id) {
         },
         headers: {
             "X-Mashape-Key": KEY,
+<<<<<<< HEAD
+=======
             "Accept": "application/json"
         },
         json: true
@@ -61,6 +63,24 @@ Rest_client.prototype.getRecipeSteps = function (recipe_id) {
     return requestPromise(options);
 };
 
+Rest_client.prototype.getIngredients = function (recipe_id) {
+    var options = {
+        method: 'GET',
+        uri: ENDPOINT + recipe_id + "/information",
+        qs: {
+            stepBreakdown:true
+        },
+        headers: {
+            "X-Mashape-Key": KEY,
+>>>>>>> ed342e8... added list ingredients and repeat step
+            "Accept": "application/json"
+        },
+        json: true
+    };
+    return requestPromise(options);
+};
+
+<<<<<<< HEAD
 Rest_client.prototype.getIngredients = function (recipe_id) {
     var options = {
         method: 'GET',
@@ -78,3 +98,6 @@ Rest_client.prototype.getIngredients = function (recipe_id) {
 };
 
 module.exports=Rest_client;
+=======
+module.exports=Rest_client;
+>>>>>>> ed342e8... added list ingredients and repeat step
