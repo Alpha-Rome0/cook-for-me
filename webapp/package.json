@@ -28,13 +28,13 @@
     "babel-preset-stage-1": "^6.1.18",
     "body-parser": "^1.16.1",
     "lodash": "^3.10.1",
-    "material-ui": "^0.16.1",
-    "react": "^0.14.8",
+    "material-ui": "^0.16.7",
+    "react": "^15.4.0",
     "react-addons-update": "^15.3.2",
-    "react-dom": "^0.14.8",
+    "react-dom": "^15.4.0",
     "react-promise": "^1.1.2",
     "react-redux": "^4.0.0",
-    "react-tap-event-plugin": "^1.0.0",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.0.4",
     "request-promise": "^4.1.1"
   }
