@@ -3,6 +3,8 @@ module.change_code = 1;
 
 var State_helper = require('./state_helper');
 var DATA_TABLE_NAME = 'recipesData';
+const fs = require('fs')
+var inputFile = 'credentials.json'
 
 //var localUrl = 'http://localhost:8000';
 //var localCredentials = {
@@ -12,7 +14,14 @@ var DATA_TABLE_NAME = 'recipesData';
 //};
 //var localDynasty = require('dynasty')(localCredentials, localUrl);
 //var dynasty = localDynasty;
-var dynasty = require('dynasty')({});
+var dynasty;
+fs.readFile(inputFile, 'utf8', function(err, data) {
+  if (err) throw err;
+  console.log('OK: ' + inputFile);
+  var localCredentials = JSON.parse(data)
+  dynasty = require('dynasty')(localCredentials)
+})
+
 function DatabaseHelper() {
 }
 var recipeTable = function () {
