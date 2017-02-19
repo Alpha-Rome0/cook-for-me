@@ -31,12 +31,14 @@ var storeData = function (userId, stateManager) {
     });
 };
 
+
 var cancelIntentFunction = function (request, response) {
     response.say("GoodBye!").shouldEndSession(true);
 };
 var reprompt = "I didnt hear anything. ";
 
 skillService.launch(function (request, response) {
+    console.log("start");
     databaseHelper.readRecipeData(request.userId).then(
         function (result) {
             console.log("got", result);
@@ -44,14 +46,13 @@ skillService.launch(function (request, response) {
             if (stateManager.currentState == "step_by_step") {
                 stateManager.currentState = "continue_state";
                 console.log(stateManager.getCurrentState());
-            }else{
-                stateManager.currentState="start";
+            } else {
+                stateManager.currentState = "start";
             }
             response.say(stateManager.getPrompt()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
             response.session(SESSION_KEY, stateManager);
-
         });
-    return false;
+    return false
 });
 
 skillService.intent("AMAZON.CancelIntent", {}, cancelIntentFunction);
@@ -63,26 +64,32 @@ skillService.intent("AMAZON.HelpIntent", {},
     });
 
 skillService.intent("load_intent", {
-    'utterances': ['{|load} {favorite|favorites|saved} {|recipe|recipes}']},
+        'utterances': ['{|load} {favorite|favorites|saved} {|recipe|recipes}']
+    },
     function (request, response) {
-        var stateManager = getStateManagerFromRequest(request);
-        var saved_recipes=stateManager.savedRecipes;
-        if(saved_recipes.length>0){
-            var talk = "";
-            for (var i = 0; i < saved_recipes.length; i++) {
-                if (saved_recipes[i].title) {
-                    talk += (i + 1).toString() + ". " + saved_recipes[i].title + ". ";
+        databaseHelper.readRecipeData(request.userId).then(
+            function (result) {
+                console.log("got", result);
+                var stateManager = result;
+                var saved_recipes = stateManager.savedRecipes;
+                if (saved_recipes.length > 0) {
+                    var talk = "";
+                    for (var i = 0; i < saved_recipes.length; i++) {
+                        if (saved_recipes[i].title) {
+                            talk += (i + 1).toString() + ". " + saved_recipes[i].title + ". ";
+                        }
+                    }
+                    stateManager.currentState = 'search_choices';
+                    var state = stateManager.getCurrentState();
+                    state.response = saved_recipes;
+                    talk = talk.replace(/&/g, 'and');
+                    response.say(stateManager.getPrompt() + ". " + talk + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
+                    response.session(SESSION_KEY, stateManager);
+                } else {
+                    response.say("you have no saved recipes").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
                 }
-            }
-            stateManager.currentState = 'search_choices';
-            var state = stateManager.getCurrentState();
-            state.response = saved_recipes;
-            talk = talk.replace(/&/g, 'and');
-            response.say(stateManager.getPrompt() + ". " + talk + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
-            response.session(SESSION_KEY, stateManager);
-        }else{
-            response.say("you have no saved recipes").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
-        }
+            });
+        return false
     });
 
 skillService.intent("continueIntent", {
@@ -183,7 +190,7 @@ skillService.intent("queryIntent", {
 });
 
 skillService.intent("storedRecipesIntent", {
-        'utterances': ['{stored} {recipes}']
+    'utterances': ['{stored} {recipes}']
 }, function (request, response) {
     response.say("This feature is not available for free tier. Pay $2000 to get this feature.");
     console.log(databaseHelper.readRecipeData("test"))
@@ -208,8 +215,8 @@ skillService.intent("beginSearchIntent", {
                     if (results[i].title) {
                         talk += (i + 1).toString() + ". " + results[i].title + ". ";
                         recipes.push({
-                            "id":results[i].id,
-                            "title":results[i].title
+                            "id": results[i].id,
+                            "title": results[i].title
                         });
                     }
                 }
@@ -239,7 +246,7 @@ skillService.intent("beginSearchIntent", {
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt  + stateManager.getHelp()).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
             });
         } else if (stateManager.currentState == "ingredients1") {
             for (i = 0; i < state.response.length; i++) {
@@ -251,7 +258,7 @@ skillService.intent("beginSearchIntent", {
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt  + stateManager.getHelp()).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
             });
         }
         return false;
@@ -277,42 +284,42 @@ skillService.intent("selectIntent", {
             console.log("RECIPES!")
             console.log(recipes)
             var recipe_info = recipes[request.slot('SELECT') - 1];
-            var id=recipe_info.id;
+            var id = recipe_info.id;
             stateManager.currentState = "steps_choice";
             var restClient = new Rest_client();
-            restClient.getIngredients(id).then(function(result){
+            restClient.getIngredients(id).then(function (result) {
                 console.log(result);
-                var title= result.title;
-                var ingredients=result.extendedIngredients;
+                var title = result.title;
+                var ingredients = result.extendedIngredients;
                 state = stateManager.getCurrentState();
-                state.ingredients=ingredients;
-                response.say("you have selected "+title+". Here are the ingredients.");
-                for(var i=0;i<ingredients.length;i++) {
-                    response.say(" "+ingredients[i].originalString+".")
+                state.ingredients = ingredients;
+                response.say("you have selected " + title + ". Here are the ingredients.");
+                for (var i = 0; i < ingredients.length; i++) {
+                    response.say(" " + ingredients[i].originalString + ".")
                 }
                 return restClient.getRecipeSteps(id);
             }).then(function (result) {
                 console.log(result);
-                if (result.length>0 && result[0].steps.length > 0) {
-                    var addSpace=function(match){
-                        var str_array=match.split(".");
-                        return str_array[0]+". "+str_array[1];
+                if (result.length > 0 && result[0].steps.length > 0) {
+                    var addSpace = function (match) {
+                        var str_array = match.split(".");
+                        return str_array[0] + ". " + str_array[1];
                     };
                     var step_arr = [];
                     var steps = result[0].steps;
                     var current_step;
                     for (var i = 0; i < steps.length; i++) {
-                        current_step=steps[i].step;
-                        current_step=current_step.replace(/.\.\w/,addSpace);
+                        current_step = steps[i].step;
+                        current_step = current_step.replace(/.\.\w/, addSpace);
                         step_arr.push(current_step);
                     }
                     state = stateManager.getCurrentState();
                     state.response = step_arr;
-                    state.recipe_info=recipe_info;
+                    state.recipe_info = recipe_info;
                     response.say(stateManager.getPrompt()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
                     response.session(SESSION_KEY, stateManager);
                 }
-                else{
+                else {
                     stateManager.currentState = "search";
                     response.say("this recipe doesn't seem to have any steps. Say search by ingredients or search by keywords to try again").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
                     response.session(SESSION_KEY, stateManager);
@@ -320,7 +327,7 @@ skillService.intent("selectIntent", {
             }).catch(function (err) {
                 console.log(err.statusCode);
                 var prompt = err.message;
-                response.say(prompt).reprompt(reprompt  + stateManager.getHelp()).shouldEndSession(false).send();
+                response.say(prompt).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
             });
             return false;
         }
@@ -328,19 +335,19 @@ skillService.intent("selectIntent", {
     }
 });
 
-skillService.intent("ingredients_intent",{
+skillService.intent("ingredients_intent", {
     'utterances': ['{what} {|are} {|the} {ingredients}']
-}, function(request,response){
+}, function (request, response) {
     var stateManager = getStateManagerFromRequest(request);
-    if(stateManager.currentState == "steps_choice" || stateManager.currentState == "step_by_step"){
+    if (stateManager.currentState == "steps_choice" || stateManager.currentState == "step_by_step") {
         response.say("here are the ingredients.");
-        var state=stateManager.getCurrentState();
-        var ingredients=state.ingredients;
-        for(var i=0;i<ingredients.length;i++){
-            response.say(" "+ingredients[i].originalString+".")
+        var state = stateManager.getCurrentState();
+        var ingredients = state.ingredients;
+        for (var i = 0; i < ingredients.length; i++) {
+            response.say(" " + ingredients[i].originalString + ".")
         }
     }
-    else{
+    else {
         response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
     }
 });
@@ -360,14 +367,14 @@ skillService.intent("steps_choice_intent", {
         if (request.slot("STEPS_SELECTION") == "all at once") {
             var output = "";
             for (var i = 0; i < steps_arr.length; i++) {
-                output += steps_arr[i]+" ";
+                output += steps_arr[i] + " ";
             }
             response.say(output).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
         } else if (request.slot("STEPS_SELECTION") == "step by step") {
-            var ingredients=state.ingredients;
+            var ingredients = state.ingredients;
             stateManager.currentState = "step_by_step";
             state = stateManager.getCurrentState();
-            state.ingredients=ingredients;
+            state.ingredients = ingredients;
             state.step = 0;
             state.response = steps_arr;
             var userId = request.userId;
@@ -404,9 +411,9 @@ skillService.intent("step_by_step_intent", {
             } else {
                 response.say("that was the first step").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
             }
-        } else if(request.slot("USERSTEP")=="repeat") {
+        } else if (request.slot("USERSTEP") == "repeat") {
             response.say(steps_arr[state.step]).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
-        }else{
+        } else {
             response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
         }
         var userId = request.userId;
@@ -417,25 +424,25 @@ skillService.intent("step_by_step_intent", {
 
 skillService.intent("save_intent",
     {
-    'utterances': ['{save} {|recipe}']
+        'utterances': ['{save} {|recipe}']
     }
     , function (request, response) {
-    var stateManager = getStateManagerFromRequest(request);
-    if(stateManager.currentState=="steps_choice"||stateManager.currentState=="step_by_step"){
-        var recipe_info=stateManager.getRecipeInfo();
-        console.log(stateManager.savedRecipes.has(recipe_info));
-        if(stateManager.savedRecipes.has(recipe_info)){
-            response.say("that recipe is already saved.").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
-        }else{
-            stateManager.savedRecipes.add(recipe_info);
-            var userId = request.userId;
-            storeData(userId, stateManager);
-            response.say("recipe saved").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
-            response.session(SESSION_KEY, stateManager);
+        var stateManager = getStateManagerFromRequest(request);
+        if (stateManager.currentState == "steps_choice" || stateManager.currentState == "step_by_step") {
+            var recipe_info = stateManager.getRecipeInfo();
+            console.log(stateManager.savedRecipes.has(recipe_info));
+            if (stateManager.savedRecipes.has(recipe_info)) {
+                response.say("that recipe is already saved.").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
+            } else {
+                stateManager.savedRecipes.add(recipe_info);
+                var userId = request.userId;
+                storeData(userId, stateManager);
+                response.say("recipe saved").reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
+                response.session(SESSION_KEY, stateManager);
+            }
+        } else {
+            response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
         }
-    }else{
-        response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
-    }
-});
+    });
 
 module.exports = skillService;
