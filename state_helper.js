@@ -5,7 +5,6 @@ var Set = require("collections/set");
 function State_manager(obj){
     this.currentState='start';
     this.savedRecipes=new Set();
-    this.storedRecipes=new Set();
     this.states=
     {
         start:{
@@ -30,20 +29,19 @@ function State_manager(obj){
             response:null
         },
         search_choices:{
-            response:null
+            response:null,
+            local:false
         },
         steps_choice:{
             response:null,
             recipe_info:null,
-            ingredients: null
+            ingredients: null,
+            local:false
         },
         step_by_step:{
             response:null,
             ingredients: null,
             step:0
-        },
-        stored_choices: {
-            response:null
         }
     };
     for(var prop in obj)this[prop]=obj[prop];
@@ -96,7 +94,7 @@ var alexa= {
         help: "Say an ingredient or say , begin search, if you are ready to search."
     },
     search_choices: {
-        prompt: "Here is what I found",
+        prompt: "Here is what I found.",
         help: "Say the number corresponding to the recipe you would like to select."
     },
     steps_choice: {
