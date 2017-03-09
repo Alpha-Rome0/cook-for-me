@@ -3,29 +3,25 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 
-import App from './containers/app';
+import App from './components/app';
 import reducers from './reducers';
 
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {lightBlue700, gray300} from 'material-ui/styles/colors';
+import { Router, Route, browserHistory } from 'react-router';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
-const muiTheme = getMuiTheme({
-  palette: {
-    canvasColor: gray300,
-    primary1Color: lightBlue700,
-  },
-  appBar: {
-    height: 50,
-  },
-});
-
 ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(reducers)}>
+    <Router history={browserHistory}>
+      <Route path="/" component={App} />
+    </Router>
+  </Provider>
+  , document.querySelector('.container'));
+
+/*ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
     <MuiThemeProvider muiTheme={muiTheme}>
       <App />
     </MuiThemeProvider>
   </Provider>
-  , document.querySelector('.container'));
+  , document.querySelector('.container'));*/
