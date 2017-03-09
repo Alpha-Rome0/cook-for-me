@@ -14,7 +14,7 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   if (err) throw err;
   console.log('OK: ' + inputFile);
   var localCredentials = JSON.parse(data)
-  dynasty = require('dynasty')(localCredentials)
+  dynasty = require('../../dynasty')(localCredentials)
   recipes = dynasty.table('recipesData').find('test')
 })
 
