@@ -5,56 +5,16 @@ var Set = require("collections/set");
 function State_manager(obj){
     this.currentState='start';
     this.savedRecipes=new Set();
-    this.states=
-    {
-        start:{
-            response:null
-        },
-        continue_state:{
-            response:null
-        },
-        search:{
-            response:null
-        },
-        keywords:{
-            response:null
-        },
-        keywords1:{
-            response:null
-        },
-        ingredients:{
-            response:null
-        },
-        ingredients1:{
-            response:null
-        },
-        search_choices:{
-            response:null,
-            local:false
-        },
-        steps_choice:{
-            response:null,
-            recipe_info:null,
-            ingredients: null,
-            local:false
-        },
-        step_by_step:{
-            response:null,
-            ingredients: null,
-            step:0
-        }
-    };
+    this.storedRecipes=null
+    this.step=null;
+    this.ingredients=null;
+    this.local=false
+    this.recipe_info=null;
+    this.steps=null;
+    this.query=null;
+    this.recipes=null;
     for(var prop in obj)this[prop]=obj[prop];
 }
-
-
-State_manager.prototype.getCurrentState=function(){
-    return this.states[this.currentState]
-};
-
-State_manager.prototype.getRecipeInfo=function(){
-    return this.states["steps_choice"].recipe_info;
-};
 
 State_manager.prototype.getPrompt=function(){
     return alexa[this.currentState].prompt
@@ -67,10 +27,10 @@ State_manager.prototype.getHelp=function(){
 var alexa= {
     start: {
         prompt: "Hello Chef, I am here to help you cook. How can I be of service? If you want to know what I can do, say help.",
-        help: "Simply say, find by keyword or find by ingredients. Say, saved recipes, to pick from a list of saved recipes. Say cancel or stop at any time to exit."
+        help: "Simply say, find by keyword or find by ingredients. Say \"saved recipes\" to pick from a list of saved recipes. Say cancel or stop at any time to exit."
     },
     continue_state: {
-        prompt: "I see that you have a saved session. Say, continue, to resume your last session or, new session, to start a new session.",
+        prompt: "I see that you have a saved session. Say \"continue\" to resume your last session or \"new session\" to start a new session.",
         help: "Say, continue, to resume your last session or, new session, to start a new session."
     },
     search: {
@@ -98,7 +58,7 @@ var alexa= {
         help: "Say the number corresponding to the recipe you would like to select."
     },
     steps_choice: {
-        prompt: "Would you like me to read the steps step by step or all at once? You may also say, save recipe, to save this recipe",
+        prompt: "Would you like me to read the steps step by step or all at once? You may also say \"save recipe\" to save this recipe or say \"what are the ingredients\" for me to repeat the ingredients",
         help: "You can say, step by step, or all at once. You may also say, save recipe, to save this recipe"
     },
     step_by_step: {

@@ -2,7 +2,7 @@
 module.change_code = 1;
 
 var State_helper = require('./state_helper');
-var DATA_TABLE_NAME = 'recipesData';
+var DATA_TABLE_NAME = 'Chef_Assist_Data';
 
 //const fs = require('fs');
 //var inputFile = 'credentials.json';
