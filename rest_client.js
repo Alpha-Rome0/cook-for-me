@@ -2,12 +2,13 @@
 module.change_code = 1;
 var requestPromise = require('request-promise');
 var ENDPOINT = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/";
+var KEY="V0PRJlj5SdmshEJmMfmYIwip2Ohvp1Moc9yjsnZltjXGEgTbEt";
 var NUM_RESULTS=10;
 
-function rest_client() {
+function Rest_client() {
 }
 
-rest_client.prototype.getListIngredients = function (ingredients_arg) {
+Rest_client.prototype.getListIngredients = function (ingredients_arg) {
     var options = {
         method: 'GET',
         uri: ENDPOINT + "findByIngredients",
@@ -18,7 +19,7 @@ rest_client.prototype.getListIngredients = function (ingredients_arg) {
             offset:0
         },
         headers: {
-            "X-Mashape-Key": "V0PRJlj5SdmshEJmMfmYIwip2Ohvp1Moc9yjsnZltjXGEgTbEt",
+            "X-Mashape-Key": KEY,
             "Accept": "application/json"
         },
         json: true
@@ -26,7 +27,7 @@ rest_client.prototype.getListIngredients = function (ingredients_arg) {
     return requestPromise(options);
 };
 
-rest_client.prototype.getListKeywords = function (keywords_arg) {
+Rest_client.prototype.getListKeywords = function (keywords_arg) {
     var options = {
         method: 'GET',
         uri: ENDPOINT + "search",
@@ -36,7 +37,7 @@ rest_client.prototype.getListKeywords = function (keywords_arg) {
             query: keywords_arg
         },
         headers: {
-            "X-Mashape-Key": "V0PRJlj5SdmshEJmMfmYIwip2Ohvp1Moc9yjsnZltjXGEgTbEt",
+            "X-Mashape-Key": KEY,
             "Accept": "application/json"
         },
         json: true
@@ -44,7 +45,7 @@ rest_client.prototype.getListKeywords = function (keywords_arg) {
     return requestPromise(options);
 };
 
-rest_client.prototype.getRecipeSteps = function (recipe_id) {
+Rest_client.prototype.getRecipeSteps = function (recipe_id) {
     var options = {
         method: 'GET',
         uri: ENDPOINT + recipe_id + "/analyzedInstructions",
@@ -52,7 +53,7 @@ rest_client.prototype.getRecipeSteps = function (recipe_id) {
             stepBreakdown:true
         },
         headers: {
-            "X-Mashape-Key": "V0PRJlj5SdmshEJmMfmYIwip2Ohvp1Moc9yjsnZltjXGEgTbEt",
+            "X-Mashape-Key": KEY,
             "Accept": "application/json"
         },
         json: true
@@ -60,4 +61,20 @@ rest_client.prototype.getRecipeSteps = function (recipe_id) {
     return requestPromise(options);
 };
 
-module.exports=rest_client;
+Rest_client.prototype.getIngredients = function (recipe_id) {
+    var options = {
+        method: 'GET',
+        uri: ENDPOINT + recipe_id + "/information",
+        qs: {
+            stepBreakdown:true
+        },
+        headers: {
+            "X-Mashape-Key": KEY,
+            "Accept": "application/json"
+        },
+        json: true
+    };
+    return requestPromise(options);
+};
+
+module.exports=Rest_client;

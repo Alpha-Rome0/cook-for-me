@@ -2,7 +2,17 @@
 module.change_code = 1;
 
 var State_helper = require('./state_helper');
-var DATA_TABLE_NAME = 'recipesData';
+var DATA_TABLE_NAME = 'Chef_Assist_Data';
+
+//const fs = require('fs');
+//var inputFile = 'credentials.json';
+//var dynasty;
+//fs.readFile(inputFile, 'utf8', function(err, data) {
+//  if (err) throw err;
+//  console.log('OK: ' + inputFile);
+//  var localCredentials = JSON.parse(data);
+//  dynasty = require('dynasty')(localCredentials)
+//});
 
 //var localUrl = 'http://localhost:8000';
 //var localCredentials = {
@@ -12,6 +22,8 @@ var DATA_TABLE_NAME = 'recipesData';
 //};
 //var localDynasty = require('dynasty')(localCredentials, localUrl);
 //var dynasty = localDynasty;
+
+
 var dynasty = require('dynasty')({});
 function DatabaseHelper() {
 }
@@ -46,9 +58,26 @@ DatabaseHelper.prototype.readRecipeData = function (userId) {
     console.log('reading recipeData with user id of : ' + userId);
     return recipeTable().find(userId).then(function (result) {
         console.log(result);
-        var data = (result === undefined ? {} : JSON.parse(result['data']));
+        var data = {}
+        if (result) {
+            data = (result.data === undefined ? {} : JSON.parse(result['data']));
+        }
+        console.log(data)
         return new State_helper(data);
     }).catch(function (error) {
+        console.log("ERROR:")
+        console.log(error);
+    });
+};
+
+DatabaseHelper.prototype.readStoredRecipeData = function (userId, stateManager) {
+    console.log('reading stored recipeData with user id of : ' + userId);
+    return recipeTable().find(userId).then(function (result) {
+        console.log(result);
+        stateManager.storedRecipes = result.storedRecipes
+        return stateManager
+    }).catch(function (error) {
+        console.log("ERROR:")
         console.log(error);
     });
 };
