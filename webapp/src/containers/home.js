@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import App from '../components/app'
+import Home from '../components/home'
 import {addStep, removeStep, submitRecipe, addIngredient, removeIngredient, updateTitle, updateDuration, updateSummary} from '../actions/steps'
 import {changePage} from '../actions/page'
 
@@ -47,4 +47,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(App)
+export default connect(mapStateToProps,mapDispatchToProps)(Home)
