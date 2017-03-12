@@ -70,6 +70,20 @@ app.post('/new', (request, response) => {
   response.sendStatus(200)
 })
 
+app.post('/update', (request, response) => {
+  var index = request.body.index
+  delete request.body['index']
+  recipes.then(function(user) {
+    user.storedRecipes[index] = request.body
+    console.log(user.storedRecipes)
+    dynasty.table('recipesData').insert(user).then(function(resp) {
+      console.log(resp)
+      getRecipeTable()
+    })
+  })
+  response.sendStatus(200)
+})
+
 app.listen(port)
 
 console.log("running server for database")
