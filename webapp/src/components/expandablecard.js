@@ -21,12 +21,8 @@ import { updateRecipe } from '../actions/ext';
 
 const propTypes = {
     index: React.PropTypes.number.isRequired,
-<<<<<<< HEAD
     recipe: React.PropTypes.object.isRequired,
     refresh: React.PropTypes.func.isRequired
-=======
-    recipe: React.PropTypes.object.isRequired
->>>>>>> 37c05f7d6415b5e10d8b0ed648745e083ee5ea70
 }
 
 const cardStyle = {
