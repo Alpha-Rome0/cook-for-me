@@ -21,8 +21,12 @@ import { updateRecipe } from '../actions/ext';
 
 const propTypes = {
     index: React.PropTypes.number.isRequired,
+<<<<<<< HEAD
     recipe: React.PropTypes.object.isRequired,
     refresh: React.PropTypes.func.isRequired
+=======
+    recipe: React.PropTypes.object.isRequired
+>>>>>>> 37c05f7d6415b5e10d8b0ed648745e083ee5ea70
 }
 
 const cardStyle = {
@@ -51,7 +55,11 @@ export default class ExpandableCard extends Component {
     this.handleIngredientChange = this.handleIngredientChange.bind(this)
     this.handleAddIngredient = this.handleAddIngredient.bind(this)
     this.handleDeleteStep = this.handleDeleteStep.bind(this)
+<<<<<<< HEAD
     const copyRecipe = JSON.parse(JSON.stringify(this.props.recipe))
+=======
+    const copyRecipe = this.props.recipe
+>>>>>>> 37c05f7d6415b5e10d8b0ed648745e083ee5ea70
     this.state = {
       expanded: false,
       editing: false,
