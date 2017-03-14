@@ -21,7 +21,8 @@ import { updateRecipe } from '../actions/ext';
 
 const propTypes = {
     index: React.PropTypes.number.isRequired,
-    recipe: React.PropTypes.object.isRequired
+    recipe: React.PropTypes.object.isRequired,
+    refresh: React.PropTypes.func.isRequired
 }
 
 const cardStyle = {
@@ -50,7 +51,7 @@ export default class ExpandableCard extends Component {
     this.handleIngredientChange = this.handleIngredientChange.bind(this)
     this.handleAddIngredient = this.handleAddIngredient.bind(this)
     this.handleDeleteStep = this.handleDeleteStep.bind(this)
-    const copyRecipe = this.props.recipe
+    const copyRecipe = JSON.parse(JSON.stringify(this.props.recipe))
     this.state = {
       expanded: false,
       editing: false,
@@ -100,6 +101,7 @@ export default class ExpandableCard extends Component {
 
   handleCancelDialog() {
     this.setState({editing: false})
+    setTimeout(this.props.refresh, 1000)
   }
 
   handleStepChange(e,v) {
