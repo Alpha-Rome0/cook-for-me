@@ -51,10 +51,11 @@ export default class ExpandableCard extends Component {
     this.handleIngredientChange = this.handleIngredientChange.bind(this)
     this.handleAddIngredient = this.handleAddIngredient.bind(this)
     this.handleDeleteStep = this.handleDeleteStep.bind(this)
+    this.addStep = this.addStep.bind(this)
     const copyRecipe = JSON.parse(JSON.stringify(this.props.recipe))
     this.state = {
       expanded: false,
-      editing: false,
+      editing: false, 
       title: copyRecipe.title,
       ingredients: copyRecipe.ingredients,
       duration: copyRecipe.description.duration,
@@ -101,7 +102,7 @@ export default class ExpandableCard extends Component {
 
   handleCancelDialog() {
     this.setState({editing: false})
-    setTimeout(this.props.refresh, 1000)
+    setTimeout(this.props.refresh, 100)
   }
 
   handleStepChange(e,v) {
@@ -118,7 +119,9 @@ export default class ExpandableCard extends Component {
 
   removeIngredient(i) {
     const newState = this.state
+    console.log(newState)
     newState.ingredients.splice(i, 1)
+    console.log(newState)
     this.setState(newState)
   }
 
@@ -137,9 +140,15 @@ export default class ExpandableCard extends Component {
   }
 
   handleDeleteStep(i) {
-    console.log(this.props.recipe)
+    console.log(i)
     const newState = this.state
-    newState.steps.splice(i,1)
+    newState.steps.splice(i, 1)
+    this.setState(newState)
+  }
+
+  addStep() {
+    const newState = this.state
+    newState.steps.push('')
     this.setState(newState)
   }
 
@@ -198,6 +207,7 @@ export default class ExpandableCard extends Component {
         actions={dialogActions}
         modal
         open={this.state.editing}
+        autoScrollBodyContent
       >
         <TextField
           floatingLabelText="Title"
@@ -241,12 +251,16 @@ export default class ExpandableCard extends Component {
                 floatingLabelFixed
                 style={stepStyle}
               />
-              <IconButton tooltip="Delete Step" onTouchTap={this.handleDeleteStep.bind(i)}>
+              <IconButton tooltip="Delete Step" onTouchTap={this.handleDeleteStep.bind(this, i)}>
                 <Delete />
               </IconButton>
             </div>
           )
         }
+        <FlatButton
+          label="Add Step"
+          onTouchTap={this.addStep}
+        />
       </Dialog>
       </div>
     )
