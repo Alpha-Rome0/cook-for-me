@@ -21,7 +21,6 @@ export default class Ingredient extends Component {
     render() {
         const style = { margin: 4 }
         const self = this
-        console.log(typeof this.props.removeIngredient)
         if (typeof this.props.removeIngredient !== 'undefined') {
             return(
                 <Chip style={style} key={this.props.id} onRequestDelete={this.handleRemove.bind(this)}>

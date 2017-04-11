@@ -61,7 +61,7 @@ export default class StoredRecipe extends Component {
             </CardText>
           </Card>
           { this.state.recipes.filter((recipe) => recipe.title.toLowerCase().includes(this.state.filter.toLowerCase()) || this.state.filter == '').map((recipe, i) =>
-              <ExpandableCard recipe={recipe} expanded={false} />
+              <ExpandableCard key={i} recipe={recipe} expanded={false} index={i} refresh={this.getRecipes}/>
             )
           }
         </div>

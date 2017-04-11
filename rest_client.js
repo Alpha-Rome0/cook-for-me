@@ -77,4 +77,20 @@ Rest_client.prototype.getIngredients = function (recipe_id) {
     return requestPromise(options);
 };
 
+Rest_client.prototype.getIngredients = function (recipe_id) {
+    var options = {
+        method: 'GET',
+        uri: ENDPOINT + recipe_id + "/information",
+        qs: {
+            stepBreakdown:true
+        },
+        headers: {
+            "X-Mashape-Key": KEY,
+            "Accept": "application/json"
+        },
+        json: true
+    };
+    return requestPromise(options);
+};
+
 module.exports=Rest_client;

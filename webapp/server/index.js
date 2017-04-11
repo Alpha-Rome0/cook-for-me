@@ -14,7 +14,7 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   if (err) throw err;
   console.log('OK: ' + inputFile);
   var localCredentials = JSON.parse(data)
-  dynasty = require('dynasty')(localCredentials)
+  dynasty = require('../../dynasty')(localCredentials)
   recipes = dynasty.table('recipesData').find('test')
 })
 
@@ -62,6 +62,20 @@ app.post('/new', (request, response) => {
   console.log(request.body)
   recipes.then(function(user) {
     user.storedRecipes.push(request.body)
+    dynasty.table('recipesData').insert(user).then(function(resp) {
+      console.log(resp)
+      getRecipeTable()
+    })
+  })
+  response.sendStatus(200)
+})
+
+app.post('/update', (request, response) => {
+  var index = request.body.index
+  delete request.body['index']
+  recipes.then(function(user) {
+    user.storedRecipes[index] = request.body
+    console.log(user.storedRecipes)
     dynasty.table('recipesData').insert(user).then(function(resp) {
       console.log(resp)
       getRecipeTable()

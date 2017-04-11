@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 const propTypes = {
     removeStep: React.PropTypes.func,
     id: React.PropTypes.number,
-    content: React.PropTypes.string
+    content: React.PropTypes.string,
 }
 
 export default class Step extends Component {

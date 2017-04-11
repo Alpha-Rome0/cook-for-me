@@ -3,14 +3,26 @@ import { Component } from 'react';
 
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import Chip from 'material-ui/Chip'
+import Delete from 'material-ui/svg-icons/action/delete'
+import IconButton from 'material-ui/IconButton'
 
 import Ingredient from './ingredient'
 
+import { updateRecipe } from '../actions/ext';
+
+
+
 const propTypes = {
-    recipe: React.PropTypes.object.isRequired
+    index: React.PropTypes.number.isRequired,
+    recipe: React.PropTypes.object.isRequired,
+    refresh: React.PropTypes.func.isRequired
 }
 
 const cardStyle = {
@@ -27,21 +39,34 @@ export default class ExpandableCard extends Component {
   constructor(props) {
     super(props);
     this.handleExpandChange = this.handleExpandChange.bind(this)
-    this.handleToggle = this.handleToggle.bind(this)
     this.handleExpand = this.handleExpand.bind(this)
     this.handleReduce = this.handleReduce.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleOpenDialog = this.handleOpenDialog.bind(this)
+    this.handleCancelDialog = this.handleCancelDialog.bind(this)
+    this.handleUpdateRecipe = this.handleUpdateRecipe.bind(this)
+    this.handleTextChange = this.handleTextChange.bind(this)
+    this.handleStepChange = this.handleStepChange.bind(this)
+    this.removeIngredient = this.removeIngredient.bind(this)
+    this.handleIngredientChange = this.handleIngredientChange.bind(this)
+    this.handleAddIngredient = this.handleAddIngredient.bind(this)
+    this.handleDeleteStep = this.handleDeleteStep.bind(this)
+    this.addStep = this.addStep.bind(this)
+    const copyRecipe = JSON.parse(JSON.stringify(this.props.recipe))
     this.state = {
-      expanded: false
+      expanded: false,
+      editing: false, 
+      title: copyRecipe.title,
+      ingredients: copyRecipe.ingredients,
+      duration: copyRecipe.description.duration,
+      summary: copyRecipe.description.summary,
+      steps: copyRecipe.steps,
+      ingredient:''
     }
   }
 
   handleExpandChange(expanded) {
     this.setState({expanded: expanded});
-  }
-
-  handleToggle(event, toggle) {
-
   }
 
   handleExpand() {
@@ -56,7 +81,89 @@ export default class ExpandableCard extends Component {
     this.setState({expanded: !this.state.expanded})
   }
 
+  handleOpenDialog() {
+    this.setState({editing: true})
+  }
+
+  handleUpdateRecipe() {
+    const newRecipe = {
+      title: this.state.title,
+      ingredients: this.state.ingredients,
+      steps: this.state.steps,
+      description: {
+        duration: this.state.duration,
+        summary: this.state.summary
+      }
+    }
+    updateRecipe(this.props.index, newRecipe)
+    this.handleCancelDialog()
+
+  }
+
+  handleCancelDialog() {
+    this.setState({editing: false})
+    setTimeout(this.props.refresh, 100)
+  }
+
+  handleStepChange(e,v) {
+    const newState = this.state
+    newState.steps[e.target.name] = v
+    this.setState(newState)
+  }
+
+  handleTextChange(e,v) {
+    const newState = this.state
+    newState[e.target.name] = v
+    this.setState(newState)
+  }
+
+  removeIngredient(i) {
+    const newState = this.state
+    console.log(newState)
+    newState.ingredients.splice(i, 1)
+    console.log(newState)
+    this.setState(newState)
+  }
+
+  handleIngredientChange(e,v) {
+    const newState = this.state
+    newState.ingredient = v
+    this.setState(newState)
+  }
+
+  handleAddIngredient(e) {
+    const newState = this.state
+    newState.ingredients.push(this.state.ingredient)
+    newState.ingredient = ''
+    this.setState(newState)
+    e.preventDefault()
+  }
+
+  handleDeleteStep(i) {
+    console.log(i)
+    const newState = this.state
+    newState.steps.splice(i, 1)
+    this.setState(newState)
+  }
+
+  addStep() {
+    const newState = this.state
+    newState.steps.push('')
+    this.setState(newState)
+  }
+
   render() {
+    const dialogActions = [
+      <FlatButton
+        label="Cancel"
+        onTouchTap={this.handleCancelDialog}
+      />,
+      <RaisedButton
+        label="Submit"
+        primary
+        onTouchTap={this.handleUpdateRecipe}
+      />
+    ]
     const listStyle = {
       backgroundColor: '#f5f5f5'
     }
@@ -64,11 +171,14 @@ export default class ExpandableCard extends Component {
       paddingLeft: 20
     }
     const wrapperStyle = {
-          display: 'flex',
-          flexWrap: 'wrap',
-        }
+      display: 'flex',
+      flexWrap: 'wrap',
+    }
+    const stepStyle = {
+      width: '90%'
+    }
     return (
-      <div onClick={this.handleClick}>
+      <div>
       <Card style={cardStyle} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
         <CardHeader
           titleStyle={titleStyle}
@@ -81,14 +191,77 @@ export default class ExpandableCard extends Component {
           <div style={wrapperStyle}>
             {
               this.props.recipe.ingredients.map((ingredient, i) => 
-                <Ingredient content={ingredient} />)
+                <Ingredient key={i} content={ingredient} />)
             }
           </div>
         </CardText>
         <List style={listStyle} expandable>
-          {this.props.recipe.steps.map((step, i) => <ListItem style={liStyle} primaryText={`Step ${i+1}. ${step}`} /> )}
+          {this.props.recipe.steps.map((step, i) => <ListItem key={i} style={liStyle} primaryText={`Step ${i+1}. ${step}`} /> )}
         </List>
+        <CardActions expandable>
+          <FlatButton label="edit" onTouchTap={this.handleOpenDialog}/>
+        </CardActions>
       </Card>
+      <Dialog
+        title="Edit Recipe"
+        actions={dialogActions}
+        modal
+        open={this.state.editing}
+        autoScrollBodyContent
+      >
+        <TextField
+          floatingLabelText="Title"
+          floatingLabelFixed
+          fullWidth
+          name="title"
+          value={this.state.title}
+          onChange={this.handleTextChange} />
+        <TextField
+          floatingLabelText="Duration"
+          floatingLabelFixed
+          type="number"
+          name="duration"
+          value={this.state.duration}
+          onChange={this.handleTextChange} />
+        <TextField
+          floatingLabelText="Summary"
+          floatingLabelFixed
+          fullWidth
+          name="summary"
+          value={this.state.summary}
+          onChange={this.handleTextChange} />
+        <form onSubmit={this.handleAddIngredient}>
+          <TextField floatingLabelText="Add Ingredients" floatingLabelFixed fullWidth onChange={this.handleIngredientChange} value={this.state.ingredient} />
+          <input type="submit" style={{visibility: 'hidden'}} />
+        </form>
+        <div style={wrapperStyle}>
+        {
+          this.state.ingredients.map((ingredient, i) =>
+            <Ingredient key={i} id={i} removeIngredient={this.removeIngredient} content={ingredient} />)
+        }
+        </div>
+        {
+          this.state.steps.map((step, i) =>
+            <div key={i}>
+              <TextField
+                name={`${i}`}
+                value={step}
+                onChange={this.handleStepChange}
+                floatingLabelText={`Step ${i + 1}`}
+                floatingLabelFixed
+                style={stepStyle}
+              />
+              <IconButton tooltip="Delete Step" onTouchTap={this.handleDeleteStep.bind(this, i)}>
+                <Delete />
+              </IconButton>
+            </div>
+          )
+        }
+        <FlatButton
+          label="Add Step"
+          onTouchTap={this.addStep}
+        />
+      </Dialog>
       </div>
     )
   }
