@@ -5,8 +5,9 @@ var Set = require("collections/set");
 function State_manager(obj){
     this.currentState='start';
     this.savedRecipes=new Set();
-    this.storedRecipes=null
+    this.storedRecipes=null;
     this.step=null;
+    this.multiplier=1;
     this.ingredients=null;
     this.local=false
     this.recipe_info=null;
@@ -58,7 +59,9 @@ var alexa= {
         help: "Say the number corresponding to the recipe you would like to select."
     },
     steps_choice: {
-        prompt: "Would you like me to read the steps step by step or all at once? You may also say \"save recipe\" to save this recipe or say \"what are the ingredients\" for me to repeat the ingredients",
+        prompt: "Would you like me to read the steps step by step or all at once? " +
+        "You may also say \"save recipe\" to save this recipe or say \"what are the ingredients\" for me to repeat the ingredients. " +
+        "You may also say \"set multiplier to a number\" to multiply the servings for this recipe",
         help: "You can say, step by step, or all at once. You may also say, save recipe, to save this recipe"
     },
     step_by_step: {

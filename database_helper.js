@@ -4,8 +4,9 @@ module.change_code = 1;
 var State_helper = require('./state_helper');
 var DATA_TABLE_NAME = 'Chef_Assist_Data';
 
-//const fs = require('fs');
-//var inputFile = 'credentials.json';
+const fs = require('fs');
+var inputFile = 'credentials.json';
+
 //var dynasty;
 //fs.readFile(inputFile, 'utf8', function(err, data) {
 //  if (err) throw err;
