@@ -101,7 +101,9 @@ app.post('/update', (request, response) => {
 app.post('/login', (request, response) => {
   console.log(request.body)
   dynasty.table('loginData').find(request.body.username).then(function(user) {
-    if (user.password == request.body.password) {
+    if (!user) {
+      response.send({successful: false, token: null})
+    } else if (user.password == request.body.password) {
       const token = createToken(user.aId)
       response.send({successful: true, token: token})
     }

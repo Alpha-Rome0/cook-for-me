@@ -11,6 +11,7 @@ import AppBar from 'material-ui/AppBar';
 import Dialog from 'material-ui/Dialog';
 
 import { LOGIN } from '../env.js'
+import { login } from '../actions/ext.js' 
 
 
 export default class Login extends React.Component {
