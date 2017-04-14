@@ -7,6 +7,20 @@ const port = 3000
 const inputFile = 'credentials.json'
 const client=new restClient();
 const bodyParser = require('body-parser')
+const jwt = require('json-web-token')
+const secret = 'cranberry'
+
+const createToken = (user) => jwt.sign({user}, secret, {expiresIn: '7d'})
+
+const checkUserMiddleware = (req, res, next) => {
+  try {
+    const decoded = jwt.verify(req.token, secret)
+    req.user = decoded
+    return next()
+  } catch (err) {
+    return res.sendStatus(401)
+  }
+}
 
 var dynasty;
 
@@ -82,6 +96,16 @@ app.post('/update', (request, response) => {
     })
   })
   response.sendStatus(200)
+})
+
+app.post('/login', (request, response) => {
+  console.log(request.body)
+  dynasty.table('loginData').find(request.body.username).then(function(user) {
+    if (user.password == request.body.password) {
+      const token = createToken(user.aId)
+      response.send({successful: true, token: token})
+    }
+  })
 })
 
 app.listen(port)
