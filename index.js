@@ -95,6 +95,19 @@ skillService.intent("load_intent", {
         return false
     });
 
+skillService.intent("userID", {
+    'utterances': ['{|give} {|me} {|my} {user} {ID}']
+
+},
+    function(request,response){
+        response.card({
+            type: "Simple",
+            title: "userID", // this is not required for type Simple
+            content: request.userId
+        });
+        response.say("k")
+    });
+
 skillService.intent("continueIntent", {
     'slots': {
         'CONTINUE': 'CONTINUETYPE'
@@ -328,6 +341,7 @@ skillService.intent("selectIntent", {
 function saveSteps(step_arr, response, stateManager) {
     stateManager.steps = step_arr;
     if (step_arr.length > 0) {
+        response.say("There are "+step_arr.length+" steps.");
         if (stateManager.local) {
             response.say(stateManager.getPrompt()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false)
         } else {
@@ -419,6 +433,46 @@ skillService.intent("ingredients_intent", {
     else {
         response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
     }
+});
+
+skillService.intent("nutrients_intent", {
+    'utterances': ['{|what} {|are} {|the} {nutrients}']
+}, function (request, response) {
+    var stateManager = getStateManagerFromRequest(request);
+    if (stateManager.currentState == "steps_choice" || stateManager.currentState == "step_by_step") {
+        var ingredients=stateManager.ingredients;
+        response.say("here are the nutrients.");
+        var ing_list="";
+        for (var i = 0; i < ingredients.length; i++) {
+            if (stateManager.local) {
+                ing_list+=ingredients[i] + ",";
+            } else {
+                var cur_ingredient=ingredients[i];
+                ing_list+=cur_ingredient.name + ",";
+            }
+        }
+        var restClient = new Rest_client();
+        restClient.getNutrients(ing_list).then(function (result) {
+            var foods=result.foods;
+            var output="";
+            var name,calories;
+            for(var i=0;i<foods.length;i++){
+                name=foods[i].food_name;
+                calories=foods[i].nf_calories;
+                output+=name+" "+calories+" calories. "
+            }
+            response.say(output).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
+
+        }).catch(function (err) {
+            console.log(err.statusCode);
+            var prompt = err.message;
+            response.say(prompt).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false).send();
+        });
+        return false;
+    }else {
+        response.say("I didn't understand what you said. " + stateManager.getHelp()).reprompt(reprompt + stateManager.getHelp()).shouldEndSession(false);
+    }
+
 });
 
 skillService.intent("multiplier_intent",{

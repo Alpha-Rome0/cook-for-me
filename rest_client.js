@@ -136,16 +136,20 @@ Rest_client.prototype.getIngredients = function (recipe_id) {
 };
 
 Rest_client.prototype.getNutrients = function (ingredients) {
+    console.log(ingredients);
     var options = {
         method: 'POST',
         uri: ENDPOINT_N,
-        query: ingredients,
         headers: {
             'x-app-id':ID_N,
             'x-app-key':KEY_N,
+        },
+        body: {
+            query: ingredients
         },
         json: true
     };
     return requestPromise(options);
 };
 
+module.exports=Rest_client;
