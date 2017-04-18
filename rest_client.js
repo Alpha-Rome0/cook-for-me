@@ -151,5 +151,6 @@ Rest_client.prototype.getNutrients = function (ingredients) {
     };
     return requestPromise(options);
 };
+module.exports = Rest_client
 
 module.exports=Rest_client;

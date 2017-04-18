@@ -10,6 +10,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import Dialog from 'material-ui/Dialog';
 
+import { LOGIN } from '../env.js'
+import { login } from '../actions/ext.js' 
+
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -35,10 +38,12 @@ export default class Login extends React.Component {
         }
     }
     checkLogin() {
-        console.log('check login')
-        if (this.state.username == 'testuser' && this.state.password == 'password') {
+        console.log('trying to log in')
+        if (login(this.state.username, this.state.password)) {
             console.log(true)
             this.context.router.push('/home')
+        } else {
+            console.log('bad info')
         }
     }
     handleUserChange(e) {
@@ -54,7 +59,7 @@ export default class Login extends React.Component {
         this.handleClose()
     }
     handleRegister() {
-
+        this.handleClose()
     }
     handleClose() {
         this.setState({open: false})

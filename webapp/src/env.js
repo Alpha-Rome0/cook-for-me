@@ -5,3 +5,4 @@ export const SEARCH_RECIPES = `${base}/search`
 export const SEARCH_ONLINE = `${base}/online`
 export const NEW_RECIPE = `${base}/new`
 export const UPDATE_RECIPE = `${base}/update`
+export const LOGIN = `${base}/login`
