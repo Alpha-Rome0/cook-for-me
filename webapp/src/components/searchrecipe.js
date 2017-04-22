@@ -9,6 +9,8 @@ import TextField from 'material-ui/TextField'
 
 import RecipeCard from './recipecard'
 
+import { getBookmarks } from '../actions/ext.js'
+
 export default class SearchRecipe extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +20,15 @@ export default class SearchRecipe extends Component {
     this.state = {
       searchResults:[],
       search:'',
+      bookmarks: []
     }
+  }
+  componentDidMount() {
+    getBookmarks().then((response) => {
+      const newState = this.state
+      newState.bookmarks = response
+      this.setState(newState)
+    })
   }
   getResults() {
     return fetch(`${SEARCH_ONLINE}?ingredients=${this.state.search}`)
@@ -76,7 +86,7 @@ export default class SearchRecipe extends Component {
       <div style={wrapperStyle}>
         {
           this.state.searchResults.map((recipe, i) =>
-            <RecipeCard recipe={recipe} />)
+            <RecipeCard recipe={recipe} bookmarked={this.state.bookmarks.map(function(b) { return b.id }).indexOf(recipe.id) != -1 }/>)
         }
       </div>
       </div>

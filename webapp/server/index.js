@@ -84,6 +84,41 @@ app.post('/new', (request, response) => {
   response.sendStatus(200)
 })
 
+app.post('/bookmark', (request, response) => {
+  console.log(request.body)
+  recipes.then(function(user) {
+    if (user.bookmarked == null) {
+      user.bookmarked = []
+    }
+    var i = user.bookmarked.map(function(recipe) {
+      return recipe.id
+    }).indexOf(request.body.id)
+    if (i == -1) {
+      user.bookmarked.push(request.body)
+    } else {
+      user.bookmarked = user.bookmarked.filter(function(recipe) {
+        return recipe.id != request.body.id
+      })
+    }
+    dynasty.table('recipesData').insert(user).then(function(resp) {
+        console.log(resp)
+        getRecipeTable()
+      })
+  })
+  response.sendStatus(200)
+})
+
+app.get('/getbookmarks', (request, response) => {
+  console.log('get bookmarks')
+  recipes.then(function(user) {
+    if (user.bookmarked != null) {
+      response.send({bookmarks: user.bookmarked})
+    } else {
+      response.send({bookmarks: [] })
+    }
+  })
+})
+
 app.post('/update', (request, response) => {
   var index = request.body.index
   delete request.body['index']

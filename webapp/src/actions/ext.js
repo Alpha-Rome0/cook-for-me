@@ -1,4 +1,4 @@
-import { UPDATE_RECIPE, LOGIN } from '../env'
+import { UPDATE_RECIPE, LOGIN, BOOKMARK_RECIPE, GET_BOOKMARKS } from '../env'
 import cookie  from 'react-cookie'
 
 export function updateRecipe(i, recipe) {
@@ -26,4 +26,22 @@ export function login(user, pass) {
       return true;
     }
   })
+}
+
+export function bookmarkRecipe(recipe) {
+  console.log('bookmark recipe')
+  fetch(BOOKMARK_RECIPE, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(recipe)
+  })
+}
+
+export function getBookmarks() {
+  console.log('get bookmarks')
+  return fetch(GET_BOOKMARKS)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson.bookmarks
+    })
 }

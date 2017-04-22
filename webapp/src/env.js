@@ -6,3 +6,5 @@ export const SEARCH_ONLINE = `${base}/online`
 export const NEW_RECIPE = `${base}/new`
 export const UPDATE_RECIPE = `${base}/update`
 export const LOGIN = `${base}/login`
+export const BOOKMARK_RECIPE = `${base}/bookmark`
+export const GET_BOOKMARKS = `${base}/getbookmarks`
