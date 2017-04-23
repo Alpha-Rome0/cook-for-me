@@ -11,7 +11,7 @@ import AppBar from 'material-ui/AppBar';
 import Dialog from 'material-ui/Dialog';
 
 import { LOGIN } from '../env.js'
-import { login, register } from '../actions/ext.js' 
+import { login, register, checkuser } from '../actions/ext.js' 
 
 
 export default class Login extends React.Component {
@@ -61,15 +61,24 @@ export default class Login extends React.Component {
         this.handleClose()
     }
     handleRegister() {
-        register(this.state.registerUser, this.state.registerPass, this.state.amazonID).then((response) => {
-          if(response) {
-              this.handleClose()
-              console.log(true)
+        checkuser(this.state.registerUser, this.state.registerPass, this.state.amazonID).then((response) => {
+          console.log("RESPONSE")
+          console.log(response)
+          if (!response) {
+            register(this.state.registerUser, this.state.registerPass, this.state.amazonID).then((response) => {
+              if(response) {
+                  this.handleClose()
+                  console.log(true)
+              } else {
+                  console.log('error occured with registration.') 
+                  //doug come up with UI error stuff here
+              }
+            }) 
           } else {
-              console.log('error occured with registration.') 
-              //doug come up with UI error stuff here
+            console.log('user already exists.')
+            //doug come up with user exists error stuff here
           }
-        }) 
+        })
     }
     handleClose() {
         this.setState({open: false})

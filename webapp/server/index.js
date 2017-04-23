@@ -164,6 +164,23 @@ app.post('/register', (request, response) => {
   })
 })
 
+app.post('/checkuser', (request, response) => {
+  dynasty.table('loginData').find(request.body.user).then(function(user) {
+    if (!user) {
+      dynasty.table('loginData').find(request.body.userId).then(function(user) {
+          if(!user) {
+            response.send({exists: false})
+          } else {
+            response.send({exists: true})
+          }
+      })
+    } else {
+      response.send({exists: true})
+    }
+  })
+})
+
+
 app.listen(port)
 
 console.log("running server for database")

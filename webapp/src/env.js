@@ -9,3 +9,4 @@ export const LOGIN = `${base}/login`
 export const BOOKMARK_RECIPE = `${base}/bookmark`
 export const GET_BOOKMARKS = `${base}/getbookmarks`
 export const REGISTER = `${base}/register`
+export const CHECK = `${base}/checkuser`
