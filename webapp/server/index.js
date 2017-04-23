@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const http = require("http")
 const fs = require('fs')
 const restClient = require('../../rest_client')
@@ -15,8 +16,9 @@ const createToken = (user) => jwt.sign(({user}), secret, {expiresIn: '7d'})
 
 const checkUserMiddleware = (req, res, next) => {
   try {
-    const decoded = jwt.verify(req.token, secret)
-    req.user = decoded
+    const decoded = jwt.verify(req.headers['authorization'], secret)
+    console.log(decoded)
+    req.userId = decoded.user
     return next()
   } catch (err) {
     return res.sendStatus(401)
@@ -37,6 +39,8 @@ function getRecipeTable() {
   recipes = dynasty.table('recipesData').find(userId)
 }
 
+app.options('*', cors())
+
 app.use(bodyParser.json())
 
 app.use(function(req, res, next) {
@@ -49,21 +53,18 @@ app.get('/', (request, response) => {
   response.send('CookForMe Web Backend')
 });
 
-app.get('/search', (request, response, userId) => {
-  if (!request['id']) {
-    request['id'] = 1
-  }
-  getRecipeTable()
-  recipes.then(function(user) {
-    response.send(JSON.parse(user.storedRecipes)[request['id']])
-  });
-});
-
-app.get('/all', (request, response, userId) => {
-  getRecipeTable()
-  recipes.then(function(user) {
-    response.send(user.storedRecipes)
-  });
+app.get('/all', checkUserMiddleware, (request, response) => {
+  dynasty.table('recipesData').find(request.userId).then(function(user) {
+    if (user) {
+      if (user.storedRecipes) {
+        response.send(user.storedRecipes)
+      } else {
+        response.send([])
+      }
+    } else {
+      response.status(401).send('User not found')
+    }
+  })
 });
 
 app.get('/online', (request, response) => {
@@ -75,69 +76,76 @@ app.get('/online', (request, response) => {
   })
 });
 
-app.post('/new', (request, response) => {
-  console.log(request.body)
-  getRecipeTable()
-  recipes.then(function(user) {
-    user.storedRecipes.push(request.body)
-    dynasty.table('recipesData').insert(user).then(function(resp) {
-      console.log(resp)
-      getRecipeTable()
-    })
-  })
-  response.sendStatus(200)
-})
-
-app.post('/bookmark', (request, response) => {
-  console.log(request.body)
-  //getRecipeTable()
-  dynasty.table('recipesData').find(userId).then(function(user) {
-    if (user.bookmarked == null) {
-      user.bookmarked = []
-    }
-    var i = user.bookmarked.map(function(recipe) {
-      return recipe.id
-    }).indexOf(request.body.id)
-    if (i == -1) {
-      user.bookmarked.push(request.body)
-    } else {
-      user.bookmarked = user.bookmarked.filter(function(recipe) {
-        return recipe.id != request.body.id
-      })
-    }
-    dynasty.table('recipesData').insert(user).then(function(resp) {
+app.post('/new', checkUserMiddleware, (request, response) => {
+  dynasty.table('recipesData').find(request.userId).then(function(user) {
+    if (user) {
+      user.storedRecipes.push(request.body)
+      dynasty.table('recipesData').insert(user).then(function(resp) {
         console.log(resp)
         getRecipeTable()
       })
-  })
-  response.sendStatus(200)
-})
-
-app.get('/getbookmarks', (request, response) => {
-  console.log('get bookmarks')
-  //getRecipeTable()
-  console.log(userId)
-  dynasty.table('recipesData').find(userId).then(function(user) {
-    if (user.bookmarked != null) {
-      response.send({bookmarks: user.bookmarked})
+      response.sendStatus(200)
     } else {
-      response.send({bookmarks: [] })
+      response.status(401).send('User not found')
     }
   })
 })
 
-app.post('/update', (request, response) => {
-  var index = request.body.index
-  delete request.body['index']
-  dynasty.table('recipesData').find(userId).then(function(user) {
-    user.storedRecipes[index] = request.body
-    console.log(user.storedRecipes)
-    dynasty.table('recipesData').insert(user).then(function(resp) {
-      console.log(resp)
-      getRecipeTable()
-    })
+app.post('/bookmark', checkUserMiddleware, (request, response) => {
+  dynasty.table('recipesData').find(request.userId).then(function(user) {
+    if (user) {
+      if (user.bookmarked == null) {
+        user.bookmarked = []
+      }
+      var i = user.bookmarked.map(function(recipe) {
+        return recipe.id
+      }).indexOf(request.body.id)
+      if (i == -1) {
+        user.bookmarked.push(request.body)
+      } else {
+        user.bookmarked = user.bookmarked.filter(function(recipe) {
+          return recipe.id != request.body.id
+        })
+      }
+      dynasty.table('recipesData').insert(user).then(function(resp) {
+        console.log(resp)
+        getRecipeTable()
+      })
+      response.sendStatus(200)
+    } else {
+      response.status(401).send('User not found')
+    }
   })
-  response.sendStatus(200)
+})
+
+app.get('/getbookmarks', checkUserMiddleware, (request, response) => {
+  dynasty.table('recipesData').find(request.userId).then(function(user) {
+    if (user) {
+      if (user.bookmarked != null) {
+        response.send({bookmarks: user.bookmarked})
+      } else {
+        response.send({bookmarks: [] })
+      }
+    } else {
+      response.status(401).send('User not found')
+    }
+  })
+})
+
+app.post('/update', checkUserMiddleware, (request, response) => {
+  dynasty.table('recipesData').find(request.userId).then(function(user) {
+    if (user) {
+      var index = request.body.index
+      delete request.body['index']
+      user.storedRecipes[index] = request.body
+      dynasty.table('recipesData').insert(user).then(function(resp) {
+        getRecipeTable()
+      })
+      response.sendStatus(200)
+    } else {
+      response.status(401).send('User not found')
+    }
+  })
 })
 
 app.post('/login', (request, response) => {
@@ -146,9 +154,9 @@ app.post('/login', (request, response) => {
     if (!user) {
       response.send({successful: false, token: null})
     } else if (user.password == request.body.password) {
-      const token = createToken(user.aId)
-      console.log(token)
-      userId = user.aId
+      console.log(user.userId)
+      const token = createToken(user.userId)
+      console.log(jwt.verify(token, secret))
       response.send({successful: true, token: token})
     }
   })
@@ -159,6 +167,8 @@ app.post('/register', (request, response) => {
   user = {username: request.body.user, password: request.body.password, 
           userId: request.body.id}
   console.log(user)
+  recipeData = {userId: request.body.id, storedRecipes: [], bookmarks: [] }
+  dynasty.table('recipesData').insert(recipeData)
   return dynasty.table('loginData').insert(user).then(function(user) {
       response.send({successful: true})
   })

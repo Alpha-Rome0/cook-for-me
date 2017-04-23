@@ -1,6 +1,6 @@
 import React from 'react'
 import { Component } from 'react'
-import {ALL_RECIPES} from '../env.js'
+import {getStoredRecipes} from '../actions/ext.js'
 
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
@@ -33,14 +33,11 @@ export default class StoredRecipe extends Component {
     })
   }
   getRecipes() {
-    return fetch(ALL_RECIPES)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      const newState = this.state
-      newState.recipes=responseJson
-      this.setState(newState)
-      console.log(responseJson)
-      return responseJson
+    const self = this
+    getStoredRecipes().then(function(response) {
+      const newState = self.state
+      newState.recipes = response
+      self.setState(newState)
     })
   }
   handleFilterChange(e,v) {

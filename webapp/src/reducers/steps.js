@@ -1,6 +1,6 @@
 import { ADD_STEP, REMOVE_STEP, SUBMIT_RECIPE, ADD_INGREDIENT, REMOVE_INGREDIENT, UPDATE_DESCRIPTION_DURATION, UPDATE_DESCRIPTION_SUMMARY, UPDATE_TITLE } from '../actions/steps'
 import update from 'react-addons-update'
-import { NEW_RECIPE } from '../env'
+import { submitRecipe } from '../actions/ext.js'
 
 const initialState = {
   title: '',
@@ -10,15 +10,6 @@ const initialState = {
   },
   ingredients:[],
   steps:[]
-}
-
-function submitRecipe(recipe) {
-  console.log(recipe)
-  fetch(NEW_RECIPE, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(recipe)
-  })
 }
 
 
