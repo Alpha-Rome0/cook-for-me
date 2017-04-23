@@ -8,3 +8,4 @@ export const UPDATE_RECIPE = `${base}/update`
 export const LOGIN = `${base}/login`
 export const BOOKMARK_RECIPE = `${base}/bookmark`
 export const GET_BOOKMARKS = `${base}/getbookmarks`
+export const REGISTER = `${base}/register`

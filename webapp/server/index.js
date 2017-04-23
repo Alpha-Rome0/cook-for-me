@@ -7,10 +7,11 @@ const port = 3000
 const inputFile = 'credentials.json'
 const client=new restClient();
 const bodyParser = require('body-parser')
-const jwt = require('json-web-token')
+const jwt = require('jsonwebtoken')
 const secret = 'cranberry'
+var userId = 'test'
 
-const createToken = (user) => jwt.sign({user}, secret, {expiresIn: '7d'})
+const createToken = (user) => jwt.sign(({user}), secret, {expiresIn: '7d'})
 
 const checkUserMiddleware = (req, res, next) => {
   try {
@@ -29,11 +30,11 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   console.log('OK: ' + inputFile);
   var localCredentials = JSON.parse(data)
   dynasty = require('../../dynasty')(localCredentials)
-  recipes = dynasty.table('recipesData').find('test')
+  recipes = dynasty.table('recipesData').find(userId)
 })
 
 function getRecipeTable() {
-  recipes = dynasty.table('recipesData').find('test')
+  recipes = dynasty.table('recipesData').find(userId)
 }
 
 app.use(bodyParser.json())
@@ -45,19 +46,21 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', (request, response) => {
-  response.send('BROWNTOWN')
+  response.send('CookForMe Web Backend')
 });
 
-app.get('/search', (request, response) => {
+app.get('/search', (request, response, userId) => {
   if (!request['id']) {
     request['id'] = 1
   }
+  getRecipeTable()
   recipes.then(function(user) {
     response.send(JSON.parse(user.storedRecipes)[request['id']])
   });
 });
 
-app.get('/all', (request, response) => {
+app.get('/all', (request, response, userId) => {
+  getRecipeTable()
   recipes.then(function(user) {
     response.send(user.storedRecipes)
   });
@@ -74,6 +77,7 @@ app.get('/online', (request, response) => {
 
 app.post('/new', (request, response) => {
   console.log(request.body)
+  getRecipeTable()
   recipes.then(function(user) {
     user.storedRecipes.push(request.body)
     dynasty.table('recipesData').insert(user).then(function(resp) {
@@ -86,7 +90,8 @@ app.post('/new', (request, response) => {
 
 app.post('/bookmark', (request, response) => {
   console.log(request.body)
-  recipes.then(function(user) {
+  //getRecipeTable()
+  dynasty.table('recipesData').find(userId).then(function(user) {
     if (user.bookmarked == null) {
       user.bookmarked = []
     }
@@ -110,7 +115,9 @@ app.post('/bookmark', (request, response) => {
 
 app.get('/getbookmarks', (request, response) => {
   console.log('get bookmarks')
-  recipes.then(function(user) {
+  //getRecipeTable()
+  console.log(userId)
+  dynasty.table('recipesData').find(userId).then(function(user) {
     if (user.bookmarked != null) {
       response.send({bookmarks: user.bookmarked})
     } else {
@@ -122,7 +129,7 @@ app.get('/getbookmarks', (request, response) => {
 app.post('/update', (request, response) => {
   var index = request.body.index
   delete request.body['index']
-  recipes.then(function(user) {
+  dynasty.table('recipesData').find(userId).then(function(user) {
     user.storedRecipes[index] = request.body
     console.log(user.storedRecipes)
     dynasty.table('recipesData').insert(user).then(function(resp) {
@@ -135,13 +142,25 @@ app.post('/update', (request, response) => {
 
 app.post('/login', (request, response) => {
   console.log(request.body)
-  dynasty.table('loginData').find(request.body.username).then(function(user) {
+  dynasty.table('loginData').find(request.body.user).then(function(user) {
     if (!user) {
       response.send({successful: false, token: null})
     } else if (user.password == request.body.password) {
       const token = createToken(user.aId)
+      console.log(token)
+      userId = user.aId
       response.send({successful: true, token: token})
     }
+  })
+})
+
+app.post('/register', (request, response) => {
+  console.log(request.body)
+  user = {username: request.body.user, password: request.body.password, 
+          userId: request.body.id}
+  console.log(user)
+  return dynasty.table('loginData').insert(user).then(function(user) {
+      response.send({successful: true})
   })
 })
 

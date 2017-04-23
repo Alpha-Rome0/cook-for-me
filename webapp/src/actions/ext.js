@@ -1,4 +1,4 @@
-import { UPDATE_RECIPE, LOGIN, BOOKMARK_RECIPE, GET_BOOKMARKS } from '../env'
+import { UPDATE_RECIPE, LOGIN, BOOKMARK_RECIPE, GET_BOOKMARKS, REGISTER } from '../env'
 import cookie  from 'react-cookie'
 
 export function updateRecipe(i, recipe) {
@@ -14,7 +14,7 @@ export function updateRecipe(i, recipe) {
 
 export function login(user, pass) {
   console.log('trying login')
-  fetch(LOGIN, {
+  return fetch(LOGIN, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({user: user, password: pass})
@@ -23,6 +23,25 @@ export function login(user, pass) {
   .then((responseJson) => {
     if (responseJson.successful) {
       cookie.save('chefAssistToken', responseJson.token, { path: '/' })
+      console.log("Cookie successful. Returning true...")
+      return true;
+    }
+  })
+}
+
+export function register(user, pass, id) {
+  console.log('trying register')
+  console.log(id)
+  return fetch(REGISTER, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({user: user, password: pass,
+                          id: id})
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+    if (responseJson.successful) {
+      console.log("Registration successful. Returning true...")
       return true;
     }
   })
