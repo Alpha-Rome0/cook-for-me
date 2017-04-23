@@ -34,7 +34,8 @@ export default class Login extends React.Component {
             amazonID: '',
             registerUser: '',
             registerPass: '',
-            open: false
+            open: false,
+            error: ''
         }
     }
     checkLogin() {
@@ -69,14 +70,21 @@ export default class Login extends React.Component {
               if(response) {
                   this.handleClose()
                   console.log(true)
+                  const newState = this.state
+                  newState.error = ''
+                  this.setState(newState)
               } else {
                   console.log('error occured with registration.') 
-                  //doug come up with UI error stuff here
+                  const newState = this.state
+                  newState.error = 'An error occured with registration.'
+                  this.setState(newState)
               }
             }) 
           } else {
             console.log('user already exists.')
-            //doug come up with user exists error stuff here
+            const newState = this.state
+            newState.error = 'This user id has already been registered.'
+            this.setState(newState)
           }
         })
     }
@@ -146,6 +154,7 @@ export default class Login extends React.Component {
                             value={this.state.amazonID}
                             onChange={this.handleAmazonIDChange}
                             fullWidth
+                            errorText={this.state.error}
                         />
                         <p>
                             An AmazonID is a alphanumeric string associated with your Amazon Echo and your Amazon Account - it's what we use to find your Echo! Go to this link to find out what your AmazonID is, and paste it into the box above.
