@@ -123,179 +123,179 @@ Log on to the [Developer Portal](https://developer.amazon.com/home.html).
 
 {
 
-  &quot;intents&quot;: [
+  "intents": [
 
     {
 
-      &quot;intent&quot;: &quot;AMAZON.CancelIntent&quot;
+      "intent": "AMAZON.CancelIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;AMAZON.StopIntent&quot;
+      "intent": "AMAZON.StopIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;AMAZON.HelpIntent&quot;
+      "intent": "AMAZON.HelpIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;load\_intent&quot;
+      "intent": "load\_intent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;CONTINUE&quot;,
+          "name": "CONTINUE",
 
-          &quot;type&quot;: &quot;CONTINUETYPE&quot;
+          "type": "CONTINUETYPE"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;continueIntent&quot;
+      "intent": "continueIntent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;SEARCH&quot;,
+          "name": "SEARCH",
 
-          &quot;type&quot;: &quot;SEARCHTYPE&quot;
+          "type": "SEARCHTYPE"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;searchIntent&quot;
+      "intent": "searchIntent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;QUERY&quot;,
+          "name": "QUERY",
 
-          &quot;type&quot;: &quot;AMAZON.Food&quot;
+          "type": "AMAZON.Food"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;queryIntent&quot;
+      "intent": "queryIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;storedRecipesIntent&quot;
+      "intent": "storedRecipesIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;beginSearchIntent&quot;
+      "intent": "beginSearchIntent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;SELECT&quot;,
+          "name": "SELECT",
 
-          &quot;type&quot;: &quot;AMAZON.NUMBER&quot;
+          "type": "AMAZON.NUMBER"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;selectIntent&quot;
+      "intent": "selectIntent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;ingredients\_intent&quot;
+      "intent": "ingredients\_intent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;MULTIPLIER&quot;,
+          "name": "MULTIPLIER",
 
-          &quot;type&quot;: &quot;AMAZON.NUMBER&quot;
+          "type": "AMAZON.NUMBER"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;multiplier\_intent&quot;
+      "intent": "multiplier\_intent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;STEPS\_SELECTION&quot;,
+          "name": "STEPS\_SELECTION",
 
-          &quot;type&quot;: &quot;STEPS\_CHOICE&quot;
+          "type": "STEPS\_CHOICE"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;steps\_choice\_intent&quot;
+      "intent": "steps\_choice\_intent"
 
     },
 
     {
 
-      &quot;slots&quot;: [
+      "slots": [
 
         {
 
-          &quot;name&quot;: &quot;USERSTEP&quot;,
+          "name": "USERSTEP",
 
-          &quot;type&quot;: &quot;STEPS\_MOVE&quot;
+          "type": "STEPS\_MOVE"
 
         }
 
       ],
 
-      &quot;intent&quot;: &quot;step\_by\_step\_intent&quot;
+      "intent": "step\_by\_step\_intent"
 
     },
 
     {
 
-      &quot;intent&quot;: &quot;save\_intent&quot;
+      "intent": "save\_intent"
 
     }
 
