@@ -60,7 +60,7 @@ click Next​.
 11. under IAM Role, select Create a new IAM role
 12. Enter a Role Name​.
 13. From the Policy document add the following code and click allow:
-````javascript
+```javascript
 {
     "Version": "2012-10-17",
     "Statement": [
