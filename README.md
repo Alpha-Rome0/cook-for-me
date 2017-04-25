@@ -58,9 +58,9 @@ click Next​.
 8. Enter a Name​ and Description​ for the function.
 9. Select node.js as the runtime
 10. For Role​ (under Lambda function handler and role​), select Create custom role.
-11. under IAM Role, select Create a new IAM role
+11. Under IAM Role, select Create a new IAM role
 12. Enter a Role Name​.
-13. From the Policy document add the following code and click allow:
+13. From the Policy document, add the following code and click allow:
 ```javascript
 {
     "Version": "2012-10-17",
@@ -294,9 +294,11 @@ $npm install
 _Database setup_
 1. Log in to the AWS Management Console and navigate to AWS DynamoDB.
 2. Under Dashboard click on Create Table
-3. Under table name, put in Chef_Assist_Data
+3. Under table name, put in recipesData
 4. Under primary key, put in userId
 5. Click on the create button.
+
+Follow the same steps to create another table called loginData, in which the primary key is username.
 
 In order to successfully deploy the server, you must create a database on DynamoDB (by following the steps above) and store its credentials in the server folder under the filename credentials.json.
 
