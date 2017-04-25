@@ -56,16 +56,41 @@ Next.
 click Next​.
 8. Enter a Name​ and Description​ for the function.
 9. Select node.js as the runtime
-10. For Role​ (under Lambda function handler and role​), select Create new role from
-template(s)​.
-11. Enter the Role Name​.
-12. From the Policy templates​ list, select Basic with DynamoDB
-13. Select the Triggers​ tab.
-14. Click Add trigger​.
-15. Click the outlined box and choose Alexa Skills Kit​.
-16. Click Submit​.
-17. Select the Upload a .ZIP file​ option and upload the zip file you created earlier.
-18. Make note of the Amazon Resource Name (ARN) for your new Lambda function.
+10. For Role​ (under Lambda function handler and role​), select Create custom role.
+11. under IAM Role, select Create a new IAM role
+12. Enter a Role Name​.
+13. From the Policy document add the following code and click allow:
+````javascript
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1428341300017",
+            "Action": [
+                "dynamodb:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Sid": "",
+            "Resource": "*",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}
+```
+14. Select the Triggers​ tab.
+15. Click Add trigger​.
+16. Click the outlined box and choose Alexa Skills Kit​.
+17. Click Submit​.
+18. Select the Upload a .ZIP file​ option and upload the zip file you created earlier.
+19. Make note of the Amazon Resource Name (ARN) for your new Lambda function.
 
 The ARN​ is displayed in the upper-right corner of the function page.
 
