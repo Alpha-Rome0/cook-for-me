@@ -291,7 +291,7 @@ _New Software Features:_
 - Added since last release: Nutrients API functionality added
 
 _Bug Fixes:_
-- TODO
+- Checks for existing user before accepting login
 
 _Known Bugs and Defects:_
 - No editing recipes via voice
