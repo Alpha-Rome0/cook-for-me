@@ -5,7 +5,7 @@
 
 _Pre-requisites_
 
-Any system, preferably built on Unix, is capable of running CookForMe. The system must have internet access in order to connect to Amazon servers.
+Any system, preferably built on Unix, is capable of running CookForMe. The system must have internet access in order to connect to Amazon servers for database storage.
 
 _Dependent Libraries_
 
@@ -37,7 +37,20 @@ $npm install
 $cd webapp
 $npm install
 
-4. The application should now have all the node dependencies it needs to run.
+4. In order for the server file to work, it needs the credentials to your database. This web instance connects to Amazon's DynamoDB database using the Dynasty library - in order to successfully deploy the server, you must create a database on DynamoDB and store its credentials in the server folder under the filename $credentials.json.
+
+Your credentials.json file should look like the one below, with your values inserted:
+{  
+   "User name":"YourUserName",
+   "Password":"YourPassword",
+   "accessKeyId":"YourAccessKey",
+   "secretAccessKey":"YourSecretAccessKey",
+   "Console login link":"YourConsoleLoginLink"
+}
+
+This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
+
+5. The application should now have all the node dependencies it needs to run.
 
 _Run Instructions_
 
@@ -114,7 +127,7 @@ in the top navigation.
 2. In the Alexa Skills Kit box, click Get Started.​
 3. Find the skill in the list and click Edit​.
 4. On the Skill Information page, copy the Application Id​ shown.
-5. Fill in the infomration on the Skill Information page
+5. Fill in the information on the Skill Information page
 6. Click on Interation Model
 7. Copy paste the following information into the Intent Schema:
 
