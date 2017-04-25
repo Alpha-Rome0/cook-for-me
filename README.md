@@ -59,7 +59,7 @@ click Next​.
 10. For Role​ (under Lambda function handler and role​), select Create new role from
 template(s)​.
 11. Enter the Role Name​.
-12. From the Policy templates​ list, select Simple Microservice permissions
+12. From the Policy templates​ list, select Basic with DynamoDB
 13. Select the Triggers​ tab.
 14. Click Add trigger​.
 15. Click the outlined box and choose Alexa Skills Kit​.
@@ -279,6 +279,13 @@ Your credentials.json file should look like the one below, with your values inse
 This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
 
 5. The application should now have all the node dependencies it needs to run.
+
+_Database setup_
+1. Log in to the AWS Management Console and navigate to AWS DynamoDB.
+2. Under Dashboard click on Create Table
+3. Under table name, put in Chef_Assist_Data
+4. Under primary key, put in userId
+5. Click on the create button.
 
 _Run Instructions_
 
