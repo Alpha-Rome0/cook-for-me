@@ -177,15 +177,15 @@ app.post('/register', (request, response) => {
 app.post('/checkuser', (request, response) => {
   dynasty.table('loginData').find(request.body.user).then(function(user) {
     if (!user) {
-      dynasty.table('loginData').find(request.body.userId).then(function(user) {
+      dynasty.table('loginData').find({userId: request.body.userId}).then(function(user) {
           if(!user) {
-            response.send({exists: false})
+            response.send({existsLogin: false, existsID: false})
           } else {
-            response.send({exists: true})
+            response.send({existsLogin: false, existsID: true})
           }
       })
     } else {
-      response.send({exists: true})
+      response.send({existsLogin: true, existsID: false})
     }
   })
 })

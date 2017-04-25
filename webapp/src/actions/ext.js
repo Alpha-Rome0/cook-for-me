@@ -66,13 +66,14 @@ export function checkuser(user, pass, id) {
   })
   .then((response) => response.json())
   .then((responseJson) => {
-    if (responseJson.exists) {
+    /*if (responseJson.exists) {
       console.log("user exists.")
       return true;
     } else {
       console.log("user does not exist.")
       return false;
-    }
+    }*/
+    return responseJson
   })
 }
 

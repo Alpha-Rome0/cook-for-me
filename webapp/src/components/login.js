@@ -35,7 +35,8 @@ export default class Login extends React.Component {
             registerUser: '',
             registerPass: '',
             open: false,
-            error: ''
+            errorID: '',
+            errorLogin: ''
         }
     }
     checkLogin() {
@@ -65,7 +66,7 @@ export default class Login extends React.Component {
         checkuser(this.state.registerUser, this.state.registerPass, this.state.amazonID).then((response) => {
           console.log("RESPONSE")
           console.log(response)
-          if (!response) {
+          if (!(response.existsID || response.existsLogin)) {
             register(this.state.registerUser, this.state.registerPass, this.state.amazonID).then((response) => {
               if(response) {
                   this.handleClose()
@@ -76,14 +77,19 @@ export default class Login extends React.Component {
               } else {
                   console.log('error occured with registration.') 
                   const newState = this.state
-                  newState.error = 'An error occured with registration.'
+                  newState.errorID = 'An error occured with registration.'
                   this.setState(newState)
               }
             }) 
+          } else if (response.existsID) {
+            console.log('user already exists.')
+            const newState = this.state
+            newState.errorID = 'This user id has already been registered.'
+            this.setState(newState)
           } else {
             console.log('user already exists.')
             const newState = this.state
-            newState.error = 'This user id has already been registered.'
+            newState.errorLogin = 'This username has already been registered.'
             this.setState(newState)
           }
         })
@@ -154,16 +160,17 @@ export default class Login extends React.Component {
                             value={this.state.amazonID}
                             onChange={this.handleAmazonIDChange}
                             fullWidth
-                            errorText={this.state.error}
+                            errorText={this.state.errorID}
                         />
                         <p>
-                            An AmazonID is a alphanumeric string associated with your Amazon Echo and your Amazon Account - it's what we use to find your Echo! Go to this link to find out what your AmazonID is, and paste it into the box above.
+                            An AmazonID is a alphanumeric string associated with your Amazon Echo and your Amazon Account - it's what we use to find your Echo! You should be able to access your Amazon ID from the mobile application for  Alexa.
                         </p>
                         <TextField
                             floatingLabelText="User Name"
                             value={this.state.registerUser}
                             onChange={this.handleRegUserChange}
                             fullWidth
+                            errorText={this.state.errorLogin}
                         />
                         <TextField
                             floatingLabelText="Password"
