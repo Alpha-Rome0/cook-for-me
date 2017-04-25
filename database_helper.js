@@ -7,13 +7,13 @@ var DATA_TABLE_NAME = 'Chef_Assist_Data';
 const fs = require('fs');
 var inputFile = 'credentials.json';
 
-var dynasty;
-fs.readFile(inputFile, 'utf8', function(err, data) {
-  if (err) throw err;
-  console.log('OK: ' + inputFile);
-  var localCredentials = JSON.parse(data);
-  dynasty = require('dynasty')(localCredentials)
-});
+//var dynasty;
+//fs.readFile(inputFile, 'utf8', function(err, data) {
+//  if (err) throw err;
+//  console.log('OK: ' + inputFile);
+//  var localCredentials = JSON.parse(data);
+//  dynasty = require('dynasty')(localCredentials)
+//});
 
 //var localUrl = 'http://localhost:8000';
 //var localCredentials = {
@@ -25,7 +25,7 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
 //var dynasty = localDynasty;
 
 
-//var dynasty = require('dynasty')({});
+var dynasty = require('dynasty')({});
 
 function DatabaseHelper() {
 }
