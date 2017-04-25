@@ -1,71 +1,20 @@
 #CookForMe
 
+**RELEASE NOTES**
 
-**INSTALLATION GUIDE - WEBAPP**
+**Release Update: April 24, 2017**
 
-_Pre-requisites_
+_New Software Features:_
+- Database and server functional
+- Ability to register an account and login with persistence to access both apps
+- Added since last release: Nutrients API functionality added
 
-Any system, preferably built on Unix, is capable of running CookForMe. The system must have internet access in order to connect to Amazon servers for database storage.
+_Bug Fixes:_
+- Checks for existing user before accepting login or registration
 
-_Dependent Libraries_
-
-Node.js (v6.10.2 or above)
-All node packages as specified by included package.json files
-Git, though it is not necessary for downloading.
-
-_Download Instructions_
-
-With Git:
-Clone the CookForMe Github repository into a directory of your choice.
-$git clone https://github.com/Mete0/cook-for-me
-
-Without Git:
-Download the CookForMe repository as a .zip file via
-https://github.com/Mete0/cook-for-me/archive/master.zip
-and extract all files into a directory of your choice.
-
-_Build Instructions_
-
-The application comes with libraries that will build the application when it is run.
-
-_Installation of actual application_
-
-1. In the CookForMe root directory, run npm install.
-2. Next, navigate into the webapp directory, and run npm install.
-3. From the root directory, the list of commands needed should look like:
-$npm install
-$cd webapp
-$npm install
-
-4. In order for the server file to work, it needs the credentials to your database. This web instance connects to Amazon's DynamoDB database using the Dynasty library - in order to successfully deploy the server, you must create a database on DynamoDB and store its credentials in the server folder under the filename $credentials.json.
-
-
-Your credentials.json file should look like the one below, with your values inserted:
-```javascript
-{  
-   "User name":"YourUserName",
-   "Password":"YourPassword",
-   "accessKeyId":"YourAccessKey",
-   "secretAccessKey":"YourSecretAccessKey",
-   "Console login link":"YourConsoleLoginLink"
-}
-```
-
-This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
-
-5. The application should now have all the node dependencies it needs to run.
-
-_Run Instructions_
-
-1. In the webapp directory, the frontend component and backend need to be run separately. Two separate terminal tabs or windows should be open.
-2. In the webapp directory, execute the following command:
-$npm run start
-3. In the server directory within webapp, and in a separate tab, execute the following command:
-$node index.js
-4. Both webapp components should now be running.
-
-
-
+_Known Bugs and Defects:_
+- No editing recipes via voice
+- Too many ingredients could mess up the output on nutrients.
 
 **INSTALLATION GUIDE - ALEXA SKILL**
 
@@ -277,24 +226,76 @@ save_intent save recipe
 10. Under the Configuration ​tab, add the ARN that you recorded previously
 11. Under the Test ​tab, you may now enable and test the skill
 
+**INSTALLATION GUIDE - WEBAPP**
+
+_Pre-requisites_
+
+Any system, preferably built on Unix, is capable of running CookForMe. The system must have internet access in order to connect to Amazon servers for database storage.
+
+_Dependent Libraries_
+
+Node.js (v6.10.2 or above)
+All node packages as specified by included package.json files
+Git, though it is not necessary for downloading.
+
+_Download Instructions_
+
+With Git:
+Clone the CookForMe Github repository into a directory of your choice.
+$git clone https://github.com/Mete0/cook-for-me
+
+Without Git:
+Download the CookForMe repository as a .zip file via
+https://github.com/Mete0/cook-for-me/archive/master.zip
+and extract all files into a directory of your choice.
+
+_Build Instructions_
+
+The application comes with libraries that will build the application when it is run.
+
+_Installation of actual application_
+
+1. In the CookForMe root directory, run npm install.
+2. Next, navigate into the webapp directory, and run npm install.
+3. From the root directory, the list of commands needed should look like:
+$npm install
+$cd webapp
+$npm install
+
+4. In order for the server file to work, it needs the credentials to your database. This web instance connects to Amazon's DynamoDB database using the Dynasty library - in order to successfully deploy the server, you must create a database on DynamoDB and store its credentials in the server folder under the filename $credentials.json.
+
+
+Your credentials.json file should look like the one below, with your values inserted:
+```javascript
+{  
+   "User name":"YourUserName",
+   "Password":"YourPassword",
+   "accessKeyId":"YourAccessKey",
+   "secretAccessKey":"YourSecretAccessKey",
+   "Console login link":"YourConsoleLoginLink"
+}
+```
+
+This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
+
+5. The application should now have all the node dependencies it needs to run.
+
+_Run Instructions_
+
+1. In the webapp directory, the frontend component and backend need to be run separately. Two separate terminal tabs or windows should be open.
+2. In the webapp directory, execute the following command:
+$npm run start
+3. In the server directory within webapp, and in a separate tab, execute the following command:
+$node index.js
+4. Both webapp components should now be running.
 
 
 
 
-**RELEASE NOTES**
 
-**Release Update: April 24, 2017**
 
-_New Software Features:_
-- Database and server functional
-- Ability to register an account and login with persistence to access both apps
-- Added since last release: Nutrients API functionality added
 
-_Bug Fixes:_
-- Checks for existing user before accepting login
 
-_Known Bugs and Defects:_
-- No editing recipes via voice
-- Too many ingredients could mess up the output on nutrients.
+
 
 
