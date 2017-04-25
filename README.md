@@ -206,7 +206,7 @@ in the top navigation.
 ```
 
 8. Add the following custom slot types
-(^&(&^%*^$&%#%$^*%&^%^$#%$^)) JAy INSERt PICTURE
+![Custom Slot Types.](https://github.com/Mete0/cook-for-me/blob/master/Capture.JPG)
 
 9. Copy/paste the following into _Sample Utterances_
 ```javascript
