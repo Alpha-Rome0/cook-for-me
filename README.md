@@ -1,4 +1,4 @@
-#CookForMe
+###CookForMe
 
 **RELEASE NOTES**
 
@@ -206,7 +206,7 @@ in the top navigation.
 (^&(&^%*^$&%#%$^*%&^%^$#%$^)) JAy INSERt PICTURE
 
 9. Copy/paste the following into _Sample Utterances_
-
+```javascript
 load_intent favorite
 load_intent load favorite
 load_intent favorites
@@ -247,6 +247,7 @@ step_by_step_intent {USERSTEP}
 step_by_step_intent {USERSTEP} step
 save_intent save
 save_intent save recipe
+```
 
 10. Under the Configuration ​tab, add the ARN that you recorded previously
 11. Under the Test ​tab, you may now enable and test the skill
