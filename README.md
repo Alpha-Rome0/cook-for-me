@@ -15,6 +15,7 @@ _Bug Fixes:_
 _Known Bugs and Defects:_
 - No editing recipes via voice
 - Too many ingredients could mess up the output on nutrients.
+- Registration does not check Alexa ID for uniqueness (hard for third party to replicate)
 
 **INSTALLATION GUIDE - ALEXA SKILL**
 
