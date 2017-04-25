@@ -283,12 +283,13 @@ save_intent save recipe
 _New Software Features:_
 - Database and server functional
 - Ability to register an account and login with persistence to access both apps
-
+- Added since last release: Nutrients API functionality added
 
 _Bug Fixes:_
 - TODO
 
 _Known Bugs and Defects:_
 - No editing recipes via voice
+- Too many ingredients could mess up the output on nutrients.
 
 
