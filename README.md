@@ -24,6 +24,7 @@ _Pre-requisites_
 Program to handle zip files or git
 
 _Download Instructions_
+
 With Git:
 Clone the CookForMe Github repository into a directory of your choice.
 $git clone https://github.com/Mete0/cook-for-me
