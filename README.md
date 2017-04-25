@@ -289,8 +289,16 @@ $npm install
 $cd webapp
 $npm install
 
-4. In order for the server file to work, it needs the credentials to your database. This web instance connects to Amazon's DynamoDB database using the Dynasty library - in order to successfully deploy the server, you must create a database on DynamoDB and store its credentials in the server folder under the filename $credentials.json.
+4. In order for the server file to work, it needs the credentials to your database. This web instance connects to Amazon's DynamoDB database using the Dynasty library. Below is information as to how to setup a database given the AWS instance that was set up for the Alexa Skill:
 
+_Database setup_
+1. Log in to the AWS Management Console and navigate to AWS DynamoDB.
+2. Under Dashboard click on Create Table
+3. Under table name, put in Chef_Assist_Data
+4. Under primary key, put in userId
+5. Click on the create button.
+
+In order to successfully deploy the server, you must create a database on DynamoDB (by following the steps above) and store its credentials in the server folder under the filename credentials.json.
 
 Your credentials.json file should look like the one below, with your values inserted:
 ```javascript
@@ -302,17 +310,9 @@ Your credentials.json file should look like the one below, with your values inse
    "Console login link":"YourConsoleLoginLink"
 }
 ```
-
 This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
 
 5. The application should now have all the node dependencies it needs to run.
-
-_Database setup_
-1. Log in to the AWS Management Console and navigate to AWS DynamoDB.
-2. Under Dashboard click on Create Table
-3. Under table name, put in Chef_Assist_Data
-4. Under primary key, put in userId
-5. Click on the create button.
 
 _Run Instructions_
 
