@@ -27,6 +27,7 @@ _Download Instructions_
 With Git:
 Clone the CookForMe Github repository into a directory of your choice.
 $git clone https://github.com/Mete0/cook-for-me
+
 Without Git:
 Download the CookForMe repository as a .zip file via
 https://github.com/Mete0/cook-for-me/archive/master.zip
