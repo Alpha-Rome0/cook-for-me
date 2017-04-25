@@ -316,7 +316,7 @@ Your credentials.json file should look like the one below, with your values inse
 ```
 This information should be provided to you upon setting up DynamoDB, so it should be a copy/paste into the correct filename in the server directory.
 
-5. The application should now have all the node dependencies it needs to run.
+6. The application should now have all the node dependencies it needs to run.
 
 _Run Instructions_
 
